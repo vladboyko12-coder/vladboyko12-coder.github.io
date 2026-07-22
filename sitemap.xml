@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://in-crm.ru/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+
+  <url><loc>https://in-crm.ru/uslugi/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://in-crm.ru/uslugi/vnedrenie-amocrm/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://in-crm.ru/uslugi/integracii/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://in-crm.ru/uslugi/vidzhety/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://in-crm.ru/uslugi/analitika/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://in-crm.ru/uslugi/obuchenie/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://in-crm.ru/uslugi/soprovozhdenie/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <url><loc>https://in-crm.ru/tarify/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+
+  <url><loc>https://in-crm.ru/keysy/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://in-crm.ru/keysy/optovaya-torgovlya/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://in-crm.ru/keysy/servis/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://in-crm.ru/keysy/proizvodstvo/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <url><loc>https://in-crm.ru/otrasli/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://in-crm.ru/otrasli/optovaya-torgovlya/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://in-crm.ru/otrasli/sfera-uslug/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://in-crm.ru/otrasli/proizvodstvo/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <url><loc>https://in-crm.ru/o-kompanii/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://in-crm.ru/kontakty/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <url><loc>https://in-crm.ru/blog/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://in-crm.ru/blog/kak-vybrat-integratora-amocrm/</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://in-crm.ru/blog/skolko-stoit-vnedrenie-amocrm/</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
+</urlset>

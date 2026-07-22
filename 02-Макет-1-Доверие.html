@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>In-CRM — Экспертная автоматизация продаж за 30 дней</title>
+<style>
+:root{
+  --bg:#F6F7F9;
+  --card:#FFFFFF;
+  --ink:#101423;
+  --muted:#5B6472;
+  --indigo:#4640D4;
+  --teal:#12B5A5;
+  --coral:#FF6A3D;
+  --radius-card:16px;
+  --radius-btn:12px;
+  --shadow:0 8px 30px rgba(16,20,35,.06);
+  --shadow-lg:0 20px 50px rgba(16,20,35,.10);
+  --border:#E7E9EE;
+  --maxw:1160px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--ink);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;line-height:1.1;text-wrap:balance;letter-spacing:-.02em}
+p{margin:0}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.section{padding:96px 0}
+.eyebrow{
+  display:inline-block;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-size:13px;
+  font-weight:700;
+  color:var(--indigo);
+  margin-bottom:16px;
+}
+.section-head{max-width:720px;margin:0 auto 56px;text-align:center}
+.section-head h2{font-size:clamp(28px,4vw,44px);margin-bottom:14px}
+.section-head p{color:var(--muted);font-size:19px}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:15px 26px;border-radius:var(--radius-btn);
+  font-weight:700;font-size:16px;cursor:pointer;border:2px solid transparent;
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease;
+  font-family:inherit;
+}
+.btn-primary{background:var(--coral);color:#fff;box-shadow:0 8px 22px rgba(255,106,61,.32)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(255,106,61,.42)}
+.btn-secondary{background:transparent;color:var(--ink);border-color:var(--border)}
+.btn-secondary:hover{border-color:var(--indigo);color:var(--indigo);transform:translateY(-2px)}
+.btn-indigo{background:var(--indigo);color:#fff;box-shadow:0 8px 22px rgba(70,64,212,.28)}
+.btn-indigo:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(70,64,212,.4)}
+.btn-block{width:100%}
+:focus-visible{outline:3px solid var(--indigo);outline-offset:2px;border-radius:6px}
+
+/* Header */
+header{position:sticky;top:0;z-index:50;background:rgba(246,247,249,.85);backdrop-filter:saturate(160%) blur(12px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;letter-spacing:-.03em}
+.logo .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--indigo),var(--teal));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800}
+.logo b{color:var(--indigo)}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{color:var(--muted);font-weight:600;font-size:15px;transition:color .15s}
+.nav-links a:hover{color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:18px}
+.nav-phone{font-weight:700;font-size:15px;white-space:nowrap}
+.burger{display:none;background:none;border:none;cursor:pointer;padding:8px}
+.burger span{display:block;width:24px;height:2px;background:var(--ink);margin:5px 0;transition:.25s}
+
+/* Hero */
+.hero{padding:70px 0 90px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(18,181,165,.1);color:#0c8577;
+  padding:8px 14px;border-radius:100px;font-weight:700;font-size:13px;margin-bottom:24px;
+}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:var(--teal)}
+.hero h1{font-size:clamp(34px,5.2vw,56px);margin-bottom:22px}
+.hero h1 .hl{color:var(--indigo)}
+.hero .lead{font-size:20px;color:var(--muted);margin-bottom:32px;max-width:560px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.hero-note{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
+.hero-note svg{flex:none}
+
+/* Hero mockup */
+.mockup{background:var(--card);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--border);overflow:hidden}
+.mockup-bar{display:flex;align-items:center;gap:7px;padding:14px 18px;border-bottom:1px solid var(--border);background:#FBFBFD}
+.mockup-bar i{width:11px;height:11px;border-radius:50%;display:block}
+.mockup-bar .r{background:#FF6058}.mockup-bar .y{background:#FEBC2E}.mockup-bar .g{background:#28C840}
+.mockup-bar .title{margin-left:10px;font-size:13px;font-weight:700;color:var(--muted)}
+.mockup-body{padding:20px}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:var(--bg);border-radius:12px;padding:14px}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.kpi .val{font-size:22px;font-weight:800;margin-top:6px}
+.kpi .val.teal{color:var(--teal)}.kpi .val.indigo{color:var(--indigo)}.kpi .val.coral{color:var(--coral)}
+.funnel{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.funnel-row{display:flex;align-items:center;gap:10px}
+.funnel-row .name{font-size:12px;color:var(--muted);width:110px;font-weight:600}
+.funnel-bar{height:22px;border-radius:7px;background:linear-gradient(90deg,var(--indigo),#6f6ae6);flex:none}
+.funnel-row .cnt{font-size:12px;font-weight:700;color:var(--ink)}
+.chart{display:flex;align-items:flex-end;gap:8px;height:90px;padding-top:6px;border-top:1px solid var(--border)}
+.chart .bar{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--teal),#63d6c9)}
+
+/* Social proof */
+.social{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.counters{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:52px 0}
+.counter{text-align:center}
+.counter .num{font-size:clamp(30px,4vw,44px);font-weight:800;color:var(--indigo);letter-spacing:-.03em}
+.counter .num .suf{color:var(--teal)}
+.counter .cap{color:var(--muted);font-weight:600;font-size:15px;margin-top:4px}
+.logos{display:flex;flex-wrap:wrap;gap:14px 40px;justify-content:center;align-items:center;padding:0 0 52px;opacity:.85}
+.logos .cl{display:flex;align-items:center;gap:8px;color:#8a92a0;font-weight:800;font-size:17px;letter-spacing:-.02em}
+.logos .cl svg{opacity:.8}
+
+/* Services */
+.grid-services{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.svc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:26px;box-shadow:var(--shadow);transition:transform .2s ease,box-shadow .2s ease}
+.svc:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.svc .ic{width:48px;height:48px;border-radius:12px;background:rgba(70,64,212,.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.svc .ic svg{stroke:var(--indigo)}
+.svc h3{font-size:18px;margin-bottom:8px;letter-spacing:-.01em}
+.svc p{color:var(--muted);font-size:15px}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;counter-reset:step}
+.step{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:26px 22px;position:relative;box-shadow:var(--shadow)}
+.step .n{width:44px;height:44px;border-radius:12px;background:var(--indigo);color:#fff;font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.step:nth-child(2) .n{background:var(--teal)}
+.step:nth-child(3) .n{background:var(--indigo)}
+.step:nth-child(4) .n{background:var(--teal)}
+.step:nth-child(5) .n{background:var(--coral)}
+.step h3{font-size:17px;margin-bottom:8px}
+.step p{color:var(--muted);font-size:14px}
+
+/* Cases */
+.grid-cases{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.case{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:28px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.case:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.case .tag{display:inline-block;background:rgba(18,181,165,.1);color:#0c8577;font-weight:700;font-size:12px;padding:6px 12px;border-radius:100px;margin-bottom:18px;text-transform:uppercase;letter-spacing:.06em}
+.ba{display:flex;align-items:stretch;gap:12px;margin-bottom:20px}
+.ba .col{flex:1;background:var(--bg);border-radius:12px;padding:14px}
+.ba .col .h{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--muted);margin-bottom:6px}
+.ba .col.was .h{color:#c25b5b}
+.ba .col.now .h{color:#0c8577}
+.ba .col p{font-size:14px;font-weight:600}
+.ba .arr{display:flex;align-items:center;color:var(--indigo)}
+.case-metric{display:flex;align-items:baseline;gap:8px}
+.case-metric .big{font-size:34px;font-weight:800;color:var(--indigo);letter-spacing:-.03em}
+.case-metric .lbl{color:var(--muted);font-size:14px;font-weight:600}
+
+/* Pricing */
+.grid-price{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start}
+.price{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:32px 28px;box-shadow:var(--shadow);position:relative;transition:transform .2s,box-shadow .2s}
+.price:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.price.hit{border:2px solid var(--indigo);box-shadow:var(--shadow-lg)}
+.price .hit-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--coral);color:#fff;font-weight:800;font-size:12px;padding:6px 16px;border-radius:100px;text-transform:uppercase;letter-spacing:.06em}
+.price .pname{font-size:19px;font-weight:800;margin-bottom:6px}
+.price .pdesc{color:var(--muted);font-size:14px;margin-bottom:20px;min-height:40px}
+.price .amount{font-size:38px;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
+.price .amount .cur{font-size:22px;color:var(--muted)}
+.price .per{color:var(--muted);font-size:13px;margin-bottom:24px}
+.price ul{list-style:none;padding:0;margin:0 0 26px}
+.price li{display:flex;gap:10px;align-items:flex-start;font-size:15px;margin-bottom:12px;color:#2c3240}
+.price li svg{flex:none;margin-top:3px}
+.price-foot{text-align:center;color:var(--muted);margin-top:32px;font-size:15px}
+.price-foot b{color:var(--teal)}
+
+/* Team */
+.grid-team{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.member{text-align:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:28px 20px;box-shadow:var(--shadow)}
+.member .av{width:88px;height:88px;border-radius:50%;margin:0 auto 16px}
+.member h3{font-size:18px;margin-bottom:4px}
+.member .role{color:var(--indigo);font-weight:700;font-size:14px;margin-bottom:8px}
+.member p{color:var(--muted);font-size:14px}
+
+/* Reviews */
+.grid-rev{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.review{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:30px;box-shadow:var(--shadow)}
+.review .quote{font-size:16px;color:#2c3240;margin-bottom:22px;line-height:1.6}
+.review .stars{color:var(--coral);margin-bottom:16px;letter-spacing:2px}
+.rev-author{display:flex;align-items:center;gap:14px}
+.rev-author .av{width:52px;height:52px;border-radius:50%;flex:none}
+.rev-author .nm{font-weight:700;font-size:15px}
+.rev-author .co{color:var(--muted);font-size:13px}
+
+/* FAQ */
+.faq{max-width:820px;margin:0 auto}
+.qa{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;box-shadow:var(--shadow);overflow:hidden}
+.qa button{width:100%;text-align:left;background:none;border:none;padding:22px 26px;font-size:18px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:inherit;color:var(--ink)}
+.qa .icn{flex:none;width:26px;height:26px;border-radius:50%;background:rgba(70,64,212,.08);color:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;transition:transform .25s}
+.qa.open .icn{transform:rotate(45deg)}
+.qa .ans{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.qa .ans p{padding:0 26px 24px;color:var(--muted);font-size:16px}
+
+/* Final CTA */
+.finalcta{background:linear-gradient(135deg,var(--indigo),#332e9e);border-radius:24px;padding:56px;color:#fff;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;box-shadow:var(--shadow-lg)}
+.finalcta h2{font-size:clamp(28px,3.5vw,40px);margin-bottom:16px;color:#fff}
+.finalcta p{color:rgba(255,255,255,.82);font-size:18px}
+.finalcta .perks{list-style:none;padding:0;margin:22px 0 0}
+.finalcta .perks li{display:flex;gap:10px;align-items:center;margin-bottom:12px;font-weight:600}
+.form-card{background:#fff;border-radius:16px;padding:30px;color:var(--ink)}
+.form-card h3{font-size:20px;margin-bottom:6px}
+.form-card .sub{color:var(--muted);font-size:14px;margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#2c3240}
+.field input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:16px;font-family:inherit;transition:border-color .15s}
+.field input:focus{outline:none;border-color:var(--indigo)}
+.form-ok{display:none;text-align:center;padding:20px 0}
+.form-ok.show{display:block}
+.form-ok .ck{width:64px;height:64px;border-radius:50%;background:rgba(18,181,165,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.form-ok h3{margin-bottom:8px}
+.form-ok p{color:var(--muted);font-size:15px}
+.privacy{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+
+/* Footer */
+footer{background:#0d1020;color:#c4c9d4;padding:64px 0 32px;margin-top:0}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+footer .logo{color:#fff}
+footer .logo b{color:#8b86ff}
+.foot-about{color:#8b93a5;font-size:15px;margin-top:16px;max-width:300px}
+.foot-col h4{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:#fff;margin-bottom:18px}
+.foot-col a,.foot-col p{display:block;color:#9aa2b3;font-size:15px;margin-bottom:12px;transition:color .15s}
+.foot-col a:hover{color:#fff}
+.socials{display:flex;gap:12px;margin-top:18px}
+.socials a{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;transition:background .18s}
+.socials a:hover{background:var(--indigo)}
+.foot-bot{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:#6d7688;font-size:14px}
+
+/* Reveal animation */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* Responsive */
+@media(max-width:980px){
+  .grid-services{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .grid-team{grid-template-columns:repeat(2,1fr)}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:820px){
+  .grid-cases,.grid-price,.grid-rev{grid-template-columns:1fr}
+  .finalcta{grid-template-columns:1fr;padding:36px}
+}
+@media(max-width:720px){
+  .section{padding:64px 0}
+  .nav-links,.nav-phone{display:none}
+  .burger{display:block}
+  .nav-links.mobile-open{display:flex;position:absolute;top:74px;left:0;right:0;flex-direction:column;background:var(--card);padding:20px 24px;gap:6px;border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+  .nav-links.mobile-open a{padding:10px 0;font-size:17px;border-bottom:1px solid var(--border)}
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .counters{grid-template-columns:repeat(2,1fr);gap:32px 16px}
+  .kpi-row{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:520px){
+  .grid-services,.steps,.grid-team{grid-template-columns:1fr}
+  .hero-cta .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important}
+  .reveal{opacity:1!important;transform:none!important;transition:none!important}
+  .btn,.svc,.case,.price{transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap nav">
+    <a href="#" class="logo"><span class="mark">In</span>In<b>-CRM</b></a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#services">Услуги</a>
+      <a href="#cases">Кейсы</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#footer">Контакты</a>
+    </nav>
+    <div class="nav-right">
+      <a href="tel:+74012985505" class="nav-phone">+7 (4012) 98-55-05</a>
+      <a href="#final" class="btn btn-primary" style="padding:12px 20px">Бесплатный аудит</a>
+      <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="reveal">
+      <span class="badge"><span class="dot"></span>Сертифицированный партнёр amoCRM · Калининград</span>
+      <h1>Экспертная <span class="hl">автоматизация продаж</span> за 30 дней</h1>
+      <p class="lead">Настраиваем amoCRM под ваши процессы так, чтобы отдел продаж давал <b>+40% к конверсии</b>, тратил <b>вдвое меньше времени</b> на заявку и <b>не терял ни одного лида</b>.</p>
+      <div class="hero-cta">
+        <a href="#final" class="btn btn-primary">Бесплатный аудит воронки</a>
+        <a href="#cases" class="btn btn-secondary">Смотреть кейсы</a>
+      </div>
+      <div class="hero-note">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12B5A5" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>
+        Аудит за 30 минут · без предоплаты · с планом внедрения
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="mockup">
+        <div class="mockup-bar">
+          <i class="r"></i><i class="y"></i><i class="g"></i>
+          <span class="title">Воронка продаж · amoCRM</span>
+        </div>
+        <div class="mockup-body">
+          <div class="kpi-row">
+            <div class="kpi"><div class="lbl">Конверсия</div><div class="val teal">+40%</div></div>
+            <div class="kpi"><div class="lbl">Сделок</div><div class="val indigo">312</div></div>
+            <div class="kpi"><div class="lbl">Обработка</div><div class="val coral">−50%</div></div>
+          </div>
+          <div class="funnel">
+            <div class="funnel-row"><span class="name">Новые заявки</span><span class="funnel-bar" style="width:100%"></span></div>
+            <div class="funnel-row"><span class="name">Квалификация</span><span class="funnel-bar" style="width:78%"></span><span class="cnt">78%</span></div>
+            <div class="funnel-row"><span class="name">Переговоры</span><span class="funnel-bar" style="width:54%"></span><span class="cnt">54%</span></div>
+            <div class="funnel-row"><span class="name">Счёт выставлен</span><span class="funnel-bar" style="width:38%"></span><span class="cnt">38%</span></div>
+            <div class="funnel-row"><span class="name">Успешно</span><span class="funnel-bar" style="width:26%"></span><span class="cnt">26%</span></div>
+          </div>
+          <div class="chart">
+            <div class="bar" style="height:42%"></div>
+            <div class="bar" style="height:58%"></div>
+            <div class="bar" style="height:50%"></div>
+            <div class="bar" style="height:72%"></div>
+            <div class="bar" style="height:64%"></div>
+            <div class="bar" style="height:88%"></div>
+            <div class="bar" style="height:78%"></div>
+            <div class="bar" style="height:100%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social">
+  <div class="wrap">
+    <div class="counters reveal">
+      <div class="counter"><div class="num">45<span class="suf">+</span></div><div class="cap">реализованных проектов</div></div>
+      <div class="counter"><div class="num">17</div><div class="cap">городов присутствия</div></div>
+      <div class="counter"><div class="num">8<span class="suf">+</span></div><div class="cap">лет опыта в CRM</div></div>
+      <div class="counter"><div class="num"><span class="suf">+</span>40<span class="suf">%</span></div><div class="cap">рост конверсии</div></div>
+    </div>
+    <div class="logos reveal">
+      <span class="cl"><svg width="22" height="22" viewBox="0 0 24 24" fill="#8a92a0"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>БалтТрейд</span>
+      <span class="cl"><svg width="22" height="22" viewBox="0 0 24 24" fill="#8a92a0"><circle cx="12" cy="12" r="9"/></svg>Янтарь-Групп</span>
+      <span class="cl"><svg width="22" height="22" viewBox="0 0 24 24" fill="#8a92a0"><polygon points="12,2 22,20 2,20"/></svg>СтройМастер</span>
+      <span class="cl"><svg width="22" height="22" viewBox="0 0 24 24" fill="#8a92a0"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7z"/></svg>МедиаЛайн</span>
+      <span class="cl"><svg width="22" height="22" viewBox="0 0 24 24" fill="#8a92a0"><rect x="3" y="6" width="18" height="12" rx="3"/></svg>ЛогистПро</span>
+      <span class="cl"><svg width="22" height="22" viewBox="0 0 24 24" fill="#8a92a0"><path d="M4 20V8l8-5 8 5v12h-6v-6h-4v6z"/></svg>ДомСервис</span>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Что мы делаем</span>
+      <h2>Полный цикл внедрения amoCRM</h2>
+      <p>От первой интеграции до обучения команды — восемь направлений, закрывающих все задачи отдела продаж.</p>
+    </div>
+    <div class="grid-services">
+      <div class="svc reveal">
+        <div class="ic"><svg width="24" height="24" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+        <h3>IP-телефония</h3>
+        <p>Звонки прямо из карточки сделки, запись разговоров и автоматическая фиксация пропущенных.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="ic"><svg width="24" height="24" fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg></div>
+        <h3>Интеграция с сайтами</h3>
+        <p>Заявки с форм, чатов и лендингов попадают в воронку мгновенно и без потерь.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="ic"><svg width="24" height="24" fill="none" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg></div>
+        <h3>Интеграция с 1С</h3>
+        <p>Синхронизация сделок, счетов и товаров с 1С — без двойного ввода данных.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="ic"><svg width="24" height="24" fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></div>
+        <h3>Почта и мессенджеры</h3>
+        <p>WhatsApp, Telegram, e-mail и соцсети в едином окне — вся переписка в CRM.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="ic"><svg width="24" height="24" fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>Индивидуальные виджеты</h3>
+        <p>Разрабатываем расширения под ваши уникальные процессы, которых нет в маркетплейсе.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="ic"><svg width="24" height="24" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+        <h3>Обучение amoCRM</h3>
+        <p>Обучаем сотрудников и руководителей работать в системе так, чтобы ей пользовались.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="ic"><svg width="24" height="24" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg></div>
+        <h3>Аудит системы продаж</h3>
+        <p>Находим узкие места, где теряются заявки и деньги, и даём план по их устранению.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="ic"><svg width="24" height="24" fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+        <h3>«Тайный покупатель»</h3>
+        <p>Проверяем реальную работу менеджеров и качество обработки обращений на практике.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW WE WORK -->
+<section class="section" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Процесс</span>
+      <h2>Как мы внедряем за 30 дней</h2>
+      <p>Прозрачные этапы с понятным результатом на каждом шаге — вы всегда знаете, что происходит.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="n">1</div><h3>Аудит</h3><p>Изучаем процессы продаж, находим точки потери заявок и денег.</p></div>
+      <div class="step reveal"><div class="n">2</div><h3>Проектирование воронок</h3><p>Строим логику этапов и автоматизаций под вашу модель продаж.</p></div>
+      <div class="step reveal"><div class="n">3</div><h3>Настройка и интеграции</h3><p>Подключаем телефонию, сайт, 1С, мессенджеры и виджеты.</p></div>
+      <div class="step reveal"><div class="n">4</div><h3>Обучение</h3><p>Обучаем команду и руководителя работе и контролю в системе.</p></div>
+      <div class="step reveal"><div class="n">5</div><h3>Сопровождение</h3><p>Поддерживаем, дорабатываем и масштабируем систему дальше.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="section" id="cases">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Результаты клиентов</span>
+      <h2>Было → Стало</h2>
+      <p>Конкретные цифры проектов: до внедрения amoCRM и после нашей настройки.</p>
+    </div>
+    <div class="grid-cases">
+      <div class="case reveal">
+        <span class="tag">Оптовая торговля</span>
+        <div class="ba">
+          <div class="col was"><div class="h">Было</div><p>Заявки терялись в почте и мессенджерах</p></div>
+          <div class="arr"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          <div class="col now"><div class="h">Стало</div><p>Все обращения в единой воронке</p></div>
+        </div>
+        <div class="case-metric"><span class="big">0</span><span class="lbl">потерянных лидов за квартал</span></div>
+      </div>
+      <div class="case reveal">
+        <span class="tag">Услуги B2B</span>
+        <div class="ba">
+          <div class="col was"><div class="h">Было</div><p>Менеджеры вручную вели таблицы Excel</p></div>
+          <div class="arr"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          <div class="col now"><div class="h">Стало</div><p>Автоматизация и типовые задачи</p></div>
+        </div>
+        <div class="case-metric"><span class="big">−50%</span><span class="lbl">времени на обработку заявки</span></div>
+      </div>
+      <div class="case reveal">
+        <span class="tag">Строительство</span>
+        <div class="ba">
+          <div class="col was"><div class="h">Было</div><p>Нет контроля этапов и прогноза продаж</p></div>
+          <div class="arr"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          <div class="col now"><div class="h">Стало</div><p>Прозрачная воронка и аналитика</p></div>
+        </div>
+        <div class="case-metric"><span class="big">+40%</span><span class="lbl">к конверсии отдела продаж</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Прозрачные цены</span>
+      <h2>Тарифы на внедрение</h2>
+      <p>Никаких скрытых доплат — вы видите полную стоимость и состав работ ещё до старта.</p>
+    </div>
+    <div class="grid-price">
+      <div class="price reveal">
+        <div class="pname">Базовый</div>
+        <div class="pdesc">Старт с amoCRM для небольшого отдела продаж.</div>
+        <div class="amount">80 000 <span class="cur">₽</span></div>
+        <div class="per">разовая настройка «под ключ»</div>
+        <ul>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Анализ процессов продаж</li>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Настройка воронок и этапов</li>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Обучение сотрудников</li>
+        </ul>
+        <a href="#final" class="btn btn-secondary btn-block">Выбрать тариф</a>
+      </div>
+      <div class="price hit reveal">
+        <span class="hit-badge">Хит</span>
+        <div class="pname">Оптимальный</div>
+        <div class="pdesc">Самый популярный выбор — продажи под контролем.</div>
+        <div class="amount">90 000 <span class="cur">₽</span></div>
+        <div class="per">разовая настройка «под ключ»</div>
+        <ul>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Всё из тарифа «Базовый»</li>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Интеграция с сайтом</li>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Интеграция с IP-телефонией</li>
+        </ul>
+        <a href="#final" class="btn btn-primary btn-block">Выбрать тариф</a>
+      </div>
+      <div class="price reveal">
+        <div class="pname">Индивидуальный</div>
+        <div class="pdesc">Комплексное решение под нестандартные задачи.</div>
+        <div class="amount">от 120 000 <span class="cur">₽</span></div>
+        <div class="per">по итогам консалтинга</div>
+        <ul>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Консалтинг процессов продаж</li>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Разработка виджетов под задачи</li>
+          <li><svg width="18" height="18" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Приоритетное сопровождение</li>
+        </ul>
+        <a href="#final" class="btn btn-secondary btn-block">Обсудить проект</a>
+      </div>
+    </div>
+    <p class="price-foot">Лицензии amoCRM — <b>от 999 ₽/мес</b> за пользователя. Подберём оптимальный тариф лицензий под ваш отдел.</p>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Команда</span>
+      <h2>Эксперты, которые внедряют</h2>
+      <p>С вами работают сертифицированные специалисты amoCRM с опытом в реальных отделах продаж.</p>
+    </div>
+    <div class="grid-team">
+      <div class="member reveal">
+        <svg class="av" viewBox="0 0 88 88"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4640D4"/><stop offset="1" stop-color="#6f6ae6"/></linearGradient></defs><circle cx="44" cy="44" r="44" fill="url(#g1)"/><text x="44" y="55" text-anchor="middle" font-size="32" font-weight="800" fill="#fff" font-family="sans-serif">АК</text></svg>
+        <h3>Алексей Кравцов</h3>
+        <div class="role">Руководитель проектов</div>
+        <p>Отвечает за внедрение и результат клиента.</p>
+      </div>
+      <div class="member reveal">
+        <svg class="av" viewBox="0 0 88 88"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#12B5A5"/><stop offset="1" stop-color="#63d6c9"/></linearGradient></defs><circle cx="44" cy="44" r="44" fill="url(#g2)"/><text x="44" y="55" text-anchor="middle" font-size="32" font-weight="800" fill="#fff" font-family="sans-serif">МС</text></svg>
+        <h3>Мария Соколова</h3>
+        <div class="role">Бизнес-аналитик</div>
+        <p>Проектирует воронки и логику автоматизаций.</p>
+      </div>
+      <div class="member reveal">
+        <svg class="av" viewBox="0 0 88 88"><defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6A3D"/><stop offset="1" stop-color="#ff9270"/></linearGradient></defs><circle cx="44" cy="44" r="44" fill="url(#g3)"/><text x="44" y="55" text-anchor="middle" font-size="32" font-weight="800" fill="#fff" font-family="sans-serif">ДВ</text></svg>
+        <h3>Дмитрий Волков</h3>
+        <div class="role">Разработчик интеграций</div>
+        <p>Пишет виджеты и связывает CRM с 1С и сайтом.</p>
+      </div>
+      <div class="member reveal">
+        <svg class="av" viewBox="0 0 88 88"><defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#332e9e"/><stop offset="1" stop-color="#4640D4"/></linearGradient></defs><circle cx="44" cy="44" r="44" fill="url(#g4)"/><text x="44" y="55" text-anchor="middle" font-size="32" font-weight="800" fill="#fff" font-family="sans-serif">ЕЛ</text></svg>
+        <h3>Елена Лебедева</h3>
+        <div class="role">Тренер по amoCRM</div>
+        <p>Обучает команды и внедряет культуру CRM.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section" id="reviews" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Отзывы</span>
+      <h2>Что говорят клиенты</h2>
+      <p>Мнения руководителей, чьи отделы продаж мы перевели на amoCRM.</p>
+    </div>
+    <div class="grid-rev">
+      <div class="review reveal">
+        <div class="stars">★★★★★</div>
+        <p class="quote">«За месяц навели порядок в заявках. Раньше теряли клиентов из мессенджеров — теперь всё в одной воронке. Конверсия ощутимо выросла.»</p>
+        <div class="rev-author">
+          <svg class="av" viewBox="0 0 52 52"><circle cx="26" cy="26" r="26" fill="#4640D4"/><text x="26" y="33" text-anchor="middle" font-size="18" font-weight="800" fill="#fff" font-family="sans-serif">ИП</text></svg>
+          <div><div class="nm">Игорь Петров</div><div class="co">директор, «БалтТрейд»</div></div>
+        </div>
+      </div>
+      <div class="review reveal">
+        <div class="stars">★★★★★</div>
+        <p class="quote">«Понравилась прозрачность: сразу озвучили цену и состав работ. Внедрение уложилось в 30 дней, менеджеры реально пользуются системой.»</p>
+        <div class="rev-author">
+          <svg class="av" viewBox="0 0 52 52"><circle cx="26" cy="26" r="26" fill="#12B5A5"/><text x="26" y="33" text-anchor="middle" font-size="18" font-weight="800" fill="#fff" font-family="sans-serif">ОН</text></svg>
+          <div><div class="nm">Ольга Наумова</div><div class="co">РОП, «Янтарь-Групп»</div></div>
+        </div>
+      </div>
+      <div class="review reveal">
+        <div class="stars">★★★★★</div>
+        <p class="quote">«Связали amoCRM с 1С и сайтом — двойной ввод данных исчез. Время на обработку заявки сократилось вдвое. Рекомендую.»</p>
+        <div class="rev-author">
+          <svg class="av" viewBox="0 0 52 52"><circle cx="26" cy="26" r="26" fill="#FF6A3D"/><text x="26" y="33" text-anchor="middle" font-size="18" font-weight="800" fill="#fff" font-family="sans-serif">СК</text></svg>
+          <div><div class="nm">Сергей Козлов</div><div class="co">владелец, «СтройМастер»</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Вопросы и ответы</span>
+      <h2>Частые вопросы</h2>
+    </div>
+    <div class="faq">
+      <div class="qa reveal">
+        <button aria-expanded="false"><span>Сколько занимает внедрение?</span><span class="icn">+</span></button>
+        <div class="ans"><p>Стандартный проект внедрения занимает до 30 дней. Точный срок зависит от количества интеграций и сложности процессов — мы называем его после бесплатного аудита.</p></div>
+      </div>
+      <div class="qa reveal">
+        <button aria-expanded="false"><span>Даёте ли вы гарантии на результат?</span><span class="icn">+</span></button>
+        <div class="ans"><p>Да. Мы фиксируем состав работ и ожидаемые метрики в договоре, а после запуска сопровождаем систему и дорабатываем её, пока она не заработает так, как планировали.</p></div>
+      </div>
+      <div class="qa reveal">
+        <button aria-expanded="false"><span>Что входит в стоимость тарифа?</span><span class="icn">+</span></button>
+        <div class="ans"><p>В стоимость входят анализ процессов, настройка воронок, подключение интеграций согласно выбранному тарифу и обучение сотрудников. Полный состав указан в описании каждого тарифа — без скрытых доплат.</p></div>
+      </div>
+      <div class="qa reveal">
+        <button aria-expanded="false"><span>Что с поддержкой после запуска?</span><span class="icn">+</span></button>
+        <div class="ans"><p>После внедрения мы остаёмся на связи: консультируем, устраняем вопросы и дорабатываем систему. Для тарифа «Индивидуальный» доступно приоритетное сопровождение.</p></div>
+      </div>
+      <div class="qa reveal">
+        <button aria-expanded="false"><span>Нужно ли отдельно платить за лицензии amoCRM?</span><span class="icn">+</span></button>
+        <div class="ans"><p>Да, лицензии amoCRM оплачиваются отдельно — от 999 ₽/мес за пользователя. Как партнёр amoCRM мы поможем подобрать оптимальный тариф лицензий под размер вашего отдела.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section" id="final">
+  <div class="wrap">
+    <div class="finalcta reveal">
+      <div>
+        <h2>Бесплатный аудит вашей воронки продаж за 30 минут</h2>
+        <p>Покажем, где вы теряете заявки и деньги, и дадим конкретный план внедрения amoCRM — без предоплаты и обязательств.</p>
+        <ul class="perks">
+          <li><svg width="20" height="20" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Разбор текущих процессов продаж</li>
+          <li><svg width="20" height="20" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Список точек роста конверсии</li>
+          <li><svg width="20" height="20" fill="none" stroke="#12B5A5" stroke-width="2.6" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Ориентир по срокам и стоимости</li>
+        </ul>
+      </div>
+      <div class="form-card">
+        <form id="leadform">
+          <h3>Получить бесплатный аудит</h3>
+          <p class="sub">Перезвоним в течение рабочего дня.</p>
+          <div class="field">
+            <label for="nm">Ваше имя</label>
+            <input id="nm" type="text" placeholder="Иван" required>
+          </div>
+          <div class="field">
+            <label for="ph">Телефон</label>
+            <input id="ph" type="tel" placeholder="+7 (___) ___-__-__" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Получить бесплатный аудит</button>
+          <p class="privacy">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p>
+        </form>
+        <div class="form-ok" id="formok">
+          <div class="ck"><svg width="30" height="30" fill="none" stroke="#12B5A5" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h3>Спасибо, заявка принята!</h3>
+          <p>Мы свяжемся с вами в течение рабочего дня и договоримся о времени аудита.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="logo"><span class="mark">In</span>In<b>-CRM</b></a>
+        <p class="foot-about">Сертифицированный партнёр amoCRM из Калининграда. Экспертная автоматизация продаж за 30 дней.</p>
+        <div class="socials">
+          <a href="#" aria-label="Telegram"><svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M21.9 4.3 2.9 11.6c-1.1.4-1 1 0 1.3l4.8 1.5 1.8 5.6c.2.6.1.9.8.9.5 0 .7-.2 1-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8L23 6c.3-1.3-.5-1.9-1.1-1.7z"/></svg></a>
+          <a href="#" aria-label="WhatsApp"><svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.5-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5c.1-.2.1-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.2.8 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
+          <a href="#" aria-label="VK"><svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M12.8 16.5c-5.3 0-8.6-3.7-8.7-9.8h2.7c.1 4.5 2.1 6.3 3.6 6.7V6.7h2.5v3.9c1.5-.2 3-1.8 3.5-3.9h2.5c-.4 2.5-2 4.1-3.1 4.8 1.1.6 2.9 2 3.6 4.9h-2.8c-.5-1.7-1.9-3-3.7-3.2v3.2z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>Услуги</h4>
+        <a href="#services">IP-телефония</a>
+        <a href="#services">Интеграция с сайтами</a>
+        <a href="#services">Интеграция с 1С</a>
+        <a href="#services">Разработка виджетов</a>
+        <a href="#services">Обучение amoCRM</a>
+      </div>
+      <div class="foot-col">
+        <h4>Компания</h4>
+        <a href="#cases">Кейсы</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#final">Бесплатный аудит</a>
+      </div>
+      <div class="foot-col">
+        <h4>Контакты</h4>
+        <a href="tel:+74012985505">+7 (4012) 98-55-05</a>
+        <a href="mailto:info@in-crm.ru">info@in-crm.ru</a>
+        <p>г. Калининград</p>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 In-CRM. Сертифицированный партнёр amoCRM.</span>
+      <span>Политика конфиденциальности</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Burger menu
+var burger=document.getElementById('burger'),nav=document.getElementById('navlinks');
+burger.addEventListener('click',function(){nav.classList.toggle('mobile-open');});
+nav.addEventListener('click',function(e){if(e.target.tagName==='A')nav.classList.remove('mobile-open');});
+
+// FAQ accordion
+document.querySelectorAll('.qa button').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var qa=btn.parentElement,ans=qa.querySelector('.ans'),open=qa.classList.contains('open');
+    document.querySelectorAll('.qa').forEach(function(x){x.classList.remove('open');x.querySelector('.ans').style.maxHeight=null;x.querySelector('button').setAttribute('aria-expanded','false');});
+    if(!open){qa.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';btn.setAttribute('aria-expanded','true');}
+  });
+});
+
+// Form
+document.getElementById('leadform').addEventListener('submit',function(e){
+  e.preventDefault();
+  this.style.display='none';
+  document.getElementById('formok').classList.add('show');
+});
+
+// Reveal on scroll
+var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(reduce){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+else{
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+}
+</script>
+</body>
+</html>
