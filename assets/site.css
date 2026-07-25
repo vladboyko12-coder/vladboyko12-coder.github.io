@@ -135,8 +135,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .btn .arw{transition:transform .2s}
 .btn:hover .arw{transform:translateX(4px)}
 .btn:active{transform:translateY(0) scale(.98)}
-.card--hover:active{transform:translateY(-2px) scale(.99)}
-.tab:active,.filter-bar button:active,.related-list a:active{transform:scale(.97)}
+.tab:active,.filter-bar button:active{transform:scale(.97)}
 .faq__q:active{opacity:.7}
 .btn--accent{background:var(--grad);border-color:transparent;color:#fff}
 .btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
@@ -389,6 +388,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;
   transition:transform .2s,box-shadow .2s}
 .card--hover:hover{transform:translateY(-5px) rotate(-.4deg);box-shadow:0 20px 40px -22px rgba(27,18,22,.24)}
+.card--hover:active{transform:translateY(-2px) scale(.99)}
 /* Иконка-обёртка (плитка) */
 .card > .ic{width:44px;height:44px;border-radius:13px;background:var(--accent-weak);color:var(--accent);
   display:flex;align-items:center;justify-content:center;margin-bottom:16px}
@@ -458,6 +458,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .related-list a{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;
   background:var(--card);border:1px solid var(--line);border-radius:100px;padding:9px 16px;transition:.18s}
 .related-list a:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.related-list a:active{transform:scale(.97)}
 
 /* --- Фильтр (кейсы) -------------------------------------------------------- */
 .filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px}
