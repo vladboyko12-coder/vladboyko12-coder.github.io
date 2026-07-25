@@ -135,6 +135,18 @@
     });
   });
 
+  /* --- Спотлайт-бордер под курсором ----------------------------------------- */
+  /* Один слушатель на документ вместо слушателя на каждой карточке. */
+  if (!reduce && window.matchMedia("(hover:hover)").matches) {
+    document.addEventListener("pointermove", function (e) {
+      var host = e.target.closest && e.target.closest(".spot");
+      if (!host) return;
+      var r = host.getBoundingClientRect();
+      host.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100) + "%");
+      host.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100) + "%");
+    }, { passive: true });
+  }
+
   /* ==========================================================================
      СЦЕНА ГЛАВНОЙ: хаос заявок → воронка amoCRM
      ========================================================================== */

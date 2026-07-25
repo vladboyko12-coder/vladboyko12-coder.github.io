@@ -268,7 +268,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 @keyframes hintrun{to{top:100%}}
 
 /* --- Шапка внутренней страницы -------------------------------------------- */
-.page-hero{padding:clamp(24px,4vw,40px) 0 clamp(48px,6vw,72px);position:relative;overflow:hidden}
+.page-hero{padding:clamp(24px,4vw,40px) 0 clamp(48px,6vw,72px);position:relative;overflow:clip}
 .page-hero::before{content:"";position:absolute;top:-40%;right:-8%;width:52%;height:150%;
   background:radial-gradient(closest-side,var(--accent-weak),transparent);pointer-events:none}
 .page-hero .wrap{position:relative;z-index:1}
@@ -624,6 +624,81 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   justify-content:space-between;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;
   color:var(--muted)}
 
+/* ==========================================================================
+   МОУШН-СЛОЙ
+   ========================================================================== */
+
+/* --- Переход между страницами (View Transitions, MPA) --------------------- */
+@view-transition{navigation:auto}
+.site-header{view-transition-name:site-header}
+.site-footer{view-transition-name:site-footer}
+::view-transition-old(root){animation:vt-out .2s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(root){animation:vt-in .3s cubic-bezier(0,0,.2,1) both}
+@keyframes vt-out{to{opacity:0;transform:translateY(-8px)}}
+@keyframes vt-in{from{opacity:0;transform:translateY(12px)}}
+
+/* --- Приёмы появления ------------------------------------------------------ */
+/* Базовый (без значения) остаётся как был — см. секцию «Появление при скролле» */
+
+/* Заголовок секции — проявляется маской снизу вверх */
+/* clip-path висит на прямых детях, а не на самом [data-rise="mask"]: если бы
+   он клипался сам, IntersectionObserver в Chromium/Edge считает видимую (после
+   клипа) площадь цели и при 105% она равна нулю — элемент никогда не пересечётся
+   с вьюпортом и .in не проставится. На детях та же картинка внешне, но сама
+   секция остаётся обычной геометрической целью для наблюдателя. */
+[data-rise="mask"]{opacity:1;transform:none}
+[data-rise="mask"]>*{clip-path:inset(0 0 105% 0);
+  transition:clip-path .75s cubic-bezier(.2,.7,.2,1)}
+[data-rise="mask"].in>*{clip-path:inset(0 0 -5% 0)}
+
+/* Карточка — подъём с лёгким уменьшением */
+[data-rise="scale"]{opacity:0;transform:translateY(18px) scale(.965);
+  transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)}
+[data-rise="scale"].in{opacity:1;transform:none}
+
+/* Строка кейса — въезд сбоку, поперёк общего вертикального движения */
+[data-rise="slide"]{opacity:0;transform:translateX(-26px);
+  transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+[data-rise="slide"].in{opacity:1;transform:none}
+
+/* Цифра — только проявление: сдвиг мешал бы работе счётчика */
+[data-rise="fade"]{opacity:0;transform:none;transition:opacity .7s ease}
+[data-rise="fade"].in{opacity:1}
+
+/* --- Прогресс чтения ------------------------------------------------------- */
+@supports (animation-timeline:scroll()){
+  .site-header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+    background:var(--grad);transform:scaleX(0);transform-origin:0 50%;
+    animation:read-progress linear both;animation-timeline:scroll(root block)}
+  @keyframes read-progress{to{transform:scaleX(1)}}
+}
+
+/* --- Параллакс шапки внутренней страницы ---------------------------------- */
+@supports (animation-timeline:view()){
+  .page-hero::before{animation:hero-drift linear both;
+    animation-timeline:view();animation-range:entry 0% exit 100%}
+  @keyframes hero-drift{
+    from{transform:translateY(-8%) scale(1.06)}
+    to{transform:translateY(12%) scale(1)}
+  }
+}
+
+/* --- Спотлайт под курсором -------------------------------------------------- */
+.spot{position:relative}
+.spot::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  pointer-events:none;opacity:0;transition:opacity .25s ease;
+  background:radial-gradient(160px circle at var(--mx,50%) var(--my,50%),
+    var(--accent),transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude}
+@media (hover:hover){ .spot:hover::after{opacity:.6} }
+
+/* --- Дрейф сетки в тёмном блоке -------------------------------------------- */
+.stats-dark::before{animation:grid-drift 40s linear infinite}
+@keyframes grid-drift{to{background-position:56px 56px}}
+
 /* --- Адаптив ---------------------------------------------------------------- */
 /* --- Этапы на мобильном: таймлайн с заполняющейся линией ------------------ */
 @media (max-width:720px){
@@ -711,6 +786,10 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important;scroll-behavior:auto}
   [data-rise]{opacity:1;transform:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
+  .spot::after{display:none}
+  [data-rise="mask"]>*{clip-path:none}
+  [data-rise="scale"],[data-rise="slide"],[data-rise="fade"]{opacity:1;transform:none}
   .story{height:auto}
   .story-pin{position:relative;height:auto;padding:90px 0 70px}
   .story-h .h-chaos{display:none}
