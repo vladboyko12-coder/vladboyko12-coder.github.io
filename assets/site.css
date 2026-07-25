@@ -34,6 +34,20 @@
     U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,
     U+2215,U+FEFF,U+FFFD;
 }
+/* Символ ₽ отсутствует в основных сабсетах Fontsource — добавляем узкий
+   диапазон только под него из сабсета latin-ext, чтобы не тянуть лишнее. */
+@font-face{
+  font-family:"Onest";
+  src:url("fonts/onest-latin-ext.woff2") format("woff2");
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+20BD;
+}
+@font-face{
+  font-family:"JetBrains Mono";
+  src:url("fonts/jetbrains-mono-latin-ext.woff2") format("woff2");
+  font-weight:100 800;font-style:normal;font-display:swap;
+  unicode-range:U+20BD;
+}
 
 /* --- Токены --------------------------------------------------------------- */
 :root{
