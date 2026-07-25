@@ -1,0 +1,597 @@
+<style>
+/* ============================================================
+   ПРОТОТИП D — «Моушн-сторителлинг»
+   Главный приём: sticky-сцена — хаос заявок из разных каналов
+   стягивается в воронку по мере скролла. Остальное — спокойнее,
+   чтобы не спорить с этим моментом. Светлый тёплый бренд-мир.
+   ============================================================ */
+.md *{box-sizing:border-box}
+.md{
+  --bg:#FBF7F4; --bg2:#F3EAE3; --card:#FFFFFF;
+  --ink:#1B1216; --muted:#6B5F63; --faint:#A79C9F;
+  --line:rgba(27,18,22,.12); --line-soft:rgba(27,18,22,.07);
+  --accent:#C6304B; --accent-2:#7E2434;
+  --grad:linear-gradient(135deg,var(--accent) 0%,var(--accent-2) 100%);
+  --accent-weak:rgba(198,48,75,.10); --on-accent:#FFF5F2;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"Cascadia Code",Consolas,"SF Mono",ui-monospace,Menlo,monospace;
+  --maxw:1180px;
+  background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:17px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+.md img,.md svg{display:block;max-width:100%}
+.md a{color:inherit;text-decoration:none}
+.md h1,.md h2,.md h3,.md h4{margin:0;line-height:1.02;letter-spacing:-.03em;text-wrap:balance}
+.md p{margin:0}
+.md ul{margin:0;padding:0;list-style:none}
+.md ::selection{background:var(--accent);color:var(--on-accent)}
+.md :focus-visible{outline:2.5px solid var(--accent);outline-offset:3px}
+
+.md .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,4vw,40px)}
+.md .mono{font-family:var(--mono)}
+.md .tnum{font-variant-numeric:tabular-nums}
+.md .muted{color:var(--muted)}
+.md .eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.md .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+
+.md [data-rise]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.md [data-rise].in{opacity:1;transform:none}
+
+/* --- Кнопки --- */
+.md .btn{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--sans);font-weight:750;font-size:15px;
+  border:2px solid var(--ink);background:var(--ink);color:var(--bg);padding:13px 24px;border-radius:100px;
+  transition:transform .16s ease,background .16s,border-color .16s,color .16s}
+.md .btn:hover{transform:translateY(-2px) rotate(-.4deg)}
+.md .btn .arw{transition:transform .2s}.md .btn:hover .arw{transform:translateX(4px)}
+.md .btn--accent{background:var(--grad);border-color:transparent;color:#fff}
+.md .btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.md .btn--ghost:hover{border-color:var(--ink)}
+
+/* --- Шапка --- */
+.md .hdr{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
+.md .nav{display:flex;align-items:center;justify-content:space-between;height:74px;gap:20px}
+.md .logo{font-weight:900;letter-spacing:-.02em;font-size:20px}
+.md .logo span{color:var(--accent)}
+.md .nav-links{display:flex;gap:26px}
+.md .nav-links a{font-size:15px;font-weight:600;color:var(--muted);transition:color .15s}
+.md .nav-links a:hover{color:var(--ink)}
+.md .nav-right{display:flex;align-items:center;gap:18px}
+.md .phone{font-family:var(--mono);font-size:13px;white-space:nowrap}
+
+/* ============================================================
+   SCROLL-STORY: хаос → воронка
+   ============================================================ */
+.md .story{position:relative;height:340vh}
+.md .story-pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 90% at 50% 15%,var(--bg2),var(--bg) 65%)}
+.md .story-head{position:absolute;top:clamp(88px,11vh,120px);left:0;right:0;text-align:center;z-index:5;padding:0 20px}
+.md .story-eyebrow{margin-bottom:16px}
+.md .story-h{position:relative;height:clamp(70px,10vw,120px)}
+.md .story-h span{position:absolute;inset:0;font-size:clamp(30px,5vw,58px);font-weight:900;letter-spacing:-.03em;transition:opacity .5s ease,transform .5s ease}
+.md .story-h .h1{color:var(--faint)}
+.md .story-h .h2{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:0;transform:translateY(14px)}
+.md .story-sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);margin-top:18px}
+.md .story-outcome{position:absolute;bottom:clamp(48px,8vh,84px);left:0;right:0;text-align:center;padding:0 20px;
+  z-index:5;opacity:0;transition:opacity .6s ease}
+.md .story-outcome.show{opacity:1}
+.md .story-result{display:inline-block;font-size:clamp(15px,1.8vw,19px);font-weight:700;margin-bottom:24px;
+  background:var(--grad);color:#fff;padding:10px 20px;border-radius:8px;
+  box-shadow:0 12px 28px -14px rgba(198,48,75,.6);box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+.md .story-field{position:relative;z-index:1;width:min(920px,92vw);height:min(280px,32vh)}
+.md .fcard{position:absolute;top:50%;left:50%;background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:6px 10px;box-shadow:0 10px 22px -13px rgba(27,18,22,.20);width:164px;
+  display:flex;align-items:center;gap:7px;will-change:transform,opacity}
+.md .fcard .ic{width:18px;height:18px;border-radius:6px;background:var(--accent-weak);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px;flex:none}
+.md .fcard .txt{min-width:0}
+.md .fcard .nm{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md .fcard .src{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:1px}
+
+.md .funnel-svg{position:absolute;top:50%;left:50%;transform:translate(-50%,calc(-50% + 36px));width:min(700px,74vw);height:min(380px,39vh);
+  z-index:0;pointer-events:none;overflow:visible}
+.md .funnel-svg .fn-fill{fill:url(#mdFunnelFill);opacity:0;transition:opacity .9s ease}
+.md .funnel-svg.lit .fn-fill{opacity:1}
+.md .funnel-svg .fn-stroke{fill:none;stroke:url(#mdFunnelGrad);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;
+  filter:drop-shadow(0 0 5px rgba(198,48,75,.35));transition:filter .6s ease}
+.md .funnel-svg.lit .fn-stroke{filter:drop-shadow(0 0 12px rgba(198,48,75,.6))}
+
+.md .story-metrics{display:flex;justify-content:center;gap:clamp(24px,5vw,64px)}
+.md .story-metrics .m .v{font-size:clamp(22px,2.8vw,34px);font-weight:900;letter-spacing:-.02em;color:var(--ink)}
+.md .story-metrics .m .k{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:4px;text-align:center}
+
+.md .story-scroll-hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:5;
+  opacity:1;transition:opacity .4s}
+.md .story-scroll-hint .ln{width:1px;height:26px;background:var(--faint);position:relative;overflow:hidden}
+.md .story-scroll-hint .ln::after{content:"";position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--accent);animation:mdhint 1.6s ease infinite}
+@keyframes mdhint{to{top:100%}}
+
+/* --- Диагональные разделители секций --- */
+.md .diag{position:relative}
+.md .diag::before{content:"";position:absolute;top:-1px;left:0;right:0;height:64px;background:var(--bg);
+  clip-path:polygon(0 100%,100% 0,100% 100%)}
+.md .diag--panel::before{background:var(--bg2)}
+
+/* --- Лого-марка --- */
+.md .marq{border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:22px 0;overflow:hidden}
+.md .marq-track{display:flex;gap:50px;width:max-content;animation:mdscroll 24s linear infinite}
+.md .marq-track span{font-size:18px;font-weight:800;color:var(--faint);white-space:nowrap}
+@keyframes mdscroll{to{transform:translateX(-50%)}}
+
+/* --- Тёмная вставка со статистикой (контрастный акцент из прототипа C) --- */
+.md .stats-dark{background:var(--ink);color:var(--bg);position:relative;overflow:hidden;padding:clamp(44px,6vw,68px) 0}
+.md .stats-dark::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:56px 56px;mask-image:radial-gradient(ellipse 90% 100% at 50% 0%,#000 50%,transparent 92%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 100% at 50% 0%,#000 50%,transparent 92%)}
+.md .stats-dark .wrap{position:relative;z-index:1}
+.md .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.md .stat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:26px 24px;transition:transform .2s ease,border-color .2s ease}
+.md .stat-card:hover{transform:translateY(-4px);border-color:rgba(198,48,75,.5)}
+.md .stat-card .v{font-size:clamp(32px,4vw,44px);font-weight:900;letter-spacing:-.02em;color:#fff;display:flex;align-items:baseline;gap:4px}
+.md .stat-card .v .s{background:linear-gradient(135deg,var(--accent),#F0748C);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.md .stat-card .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:14px}
+
+/* --- Секции --- */
+.md .section{padding:clamp(56px,8vw,100px) 0}
+.md .section--panel{background:var(--bg2)}
+.md .s-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:44px;flex-wrap:wrap}
+.md .s-head h2{font-size:clamp(28px,3.6vw,44px);font-weight:900;letter-spacing:-.03em}
+.md .link{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;border-bottom:2px solid var(--accent);padding-bottom:2px}
+
+/* --- Табы услуг --- */
+.md .tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px}
+.md .tab{font-family:var(--mono);font-size:12.5px;letter-spacing:.02em;cursor:pointer;background:var(--card);border:1px solid var(--line);
+  border-radius:100px;padding:10px 18px;color:var(--muted);transition:.18s}
+.md .tab:hover{border-color:var(--ink);color:var(--ink)}
+.md .tab.active{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.md .panel{display:none}.md .panel.active{display:block;animation:mdfade .4s ease}
+@keyframes mdfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.md .panel-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,4vw,48px);align-items:center}
+.md .panel h3{font-size:clamp(22px,2.4vw,30px);font-weight:800;margin-bottom:14px}
+.md .panel p{color:var(--muted);font-size:16.5px;line-height:1.6;margin-bottom:20px}
+.md .checklist{display:flex;flex-direction:column;gap:12px}
+.md .checklist li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px}
+.md .checklist .ck{font-family:var(--mono);color:var(--accent);flex:none;font-weight:700}
+.md .panel-visual{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;min-height:220px;
+  display:flex;flex-direction:column;justify-content:center;gap:16px;box-shadow:0 16px 34px -20px rgba(27,18,22,.18)}
+.md .kpi-row{display:flex;justify-content:space-between;align-items:baseline}
+.md .kpi-row .kv{font-size:30px;font-weight:900;letter-spacing:-.02em;color:var(--accent)}
+.md .kpi-row .kk{font-size:13px;color:var(--muted);max-width:14em;text-align:right}
+
+/* --- Процесс --- */
+.md .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.md .step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;transition:transform .2s;position:relative}
+.md .step:hover{transform:translateY(-5px) rotate(-.5deg)}
+.md .step .no{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:800}
+.md .step .wk{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);float:right}
+.md .step h3{font-size:18px;font-weight:800;margin:14px 0 8px}
+.md .step p{font-size:14px;color:var(--muted);line-height:1.5}
+
+/* --- Карточки --- */
+.md .grid{display:grid;gap:22px}
+.md .grid--3{grid-template-columns:repeat(3,1fr)}
+.md .grid--4{grid-template-columns:repeat(4,1fr)}
+.md .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;transition:transform .2s,box-shadow .2s}
+.md .card--hover:hover{transform:translateY(-5px) rotate(-.4deg);box-shadow:0 20px 40px -22px rgba(27,18,22,.24)}
+.md .card--case{display:flex;flex-direction:column}
+.md .card--case .tag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.md .card--case h3{font-size:19px;font-weight:800;margin:14px 0 10px}
+.md .card--case p{color:var(--muted);font-size:15px;line-height:1.5}
+.md .card--case .meta{margin-top:auto;padding-top:16px;border-top:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:baseline}
+.md .card--case .meta span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.md .card--case .meta b{font-size:24px;font-weight:900;color:var(--accent)}
+.md .card--team{text-align:center}
+.md .card--team .ava{width:76px;height:76px;border-radius:50%;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;margin:0 auto 16px}
+.md .card--team h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.md .card--team .role{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+.md .card--team p{margin-top:10px;font-size:14px;color:var(--muted)}
+.md .card--review .stars{color:var(--accent);letter-spacing:3px;font-size:14px;margin-bottom:14px}
+.md .card--review blockquote{margin:0 0 18px;font-size:16px;line-height:1.55}
+.md .card--review .who{display:flex;align-items:center;gap:12px}
+.md .card--review .who .ava{width:42px;height:42px;border-radius:50%;background:var(--accent-weak);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex:none}
+.md .card--review .who b{display:block;font-size:15px}
+.md .card--review .who span{font-size:13px;color:var(--muted)}
+
+/* --- Тарифы --- */
+.md .prices{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.md .price{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 28px;display:flex;flex-direction:column;transition:transform .2s}
+.md .price:hover{transform:translateY(-5px)}
+.md .price--featured{border:2px solid var(--ink);position:relative}
+.md .price--featured::before{content:"ХИТ";position:absolute;top:-13px;right:24px;background:var(--grad);color:#fff;font-family:var(--mono);
+  font-size:11px;font-weight:700;letter-spacing:.06em;padding:5px 12px;border-radius:100px}
+.md .price .plan{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.md .price .amount{font-size:38px;font-weight:900;letter-spacing:-.03em;margin:14px 0 4px}
+.md .price .amount .cur{color:var(--accent)}
+.md .price .note{font-size:14px;color:var(--muted)}
+.md .price ul{margin:22px 0 26px;display:flex;flex-direction:column;gap:12px}
+.md .price li{display:flex;gap:10px;font-size:15px;align-items:baseline}
+.md .price li::before{content:"→";color:var(--accent);font-family:var(--mono);flex:none}
+.md .price .btn{margin-top:auto;justify-content:center}
+
+/* --- FAQ --- */
+.md .faq{border-top:2px solid var(--ink);max-width:840px}
+.md .faq__item{border-bottom:1px solid var(--line)}
+.md .faq__q{width:100%;background:none;border:0;cursor:pointer;text-align:left;font-family:inherit;font-size:18px;font-weight:750;color:var(--ink);padding:22px 44px 22px 0;position:relative}
+.md .faq__q::after{content:"+";position:absolute;right:6px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:22px;transition:transform .25s}
+.md .faq__item.open .faq__q::after{transform:translateY(-50%) rotate(45deg)}
+.md .faq__a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.md .faq__a p{padding:0 44px 24px 0;color:var(--muted);font-size:16px}
+.md .faq__item.open .faq__a{max-height:320px}
+
+/* --- Аудит --- */
+.md .audit{background:var(--ink);color:var(--bg)}
+.md .audit .wrap{padding:clamp(52px,7vw,88px) clamp(20px,4vw,40px)}
+.md .audit-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,4vw,56px);align-items:center}
+.md .audit h2{color:var(--bg);font-size:clamp(26px,3.4vw,42px);font-weight:900;letter-spacing:-.03em}
+.md .audit .lead{color:color-mix(in srgb,var(--bg) 72%,transparent);margin-top:16px;font-size:18px;line-height:1.55}
+.md .audit-checks{margin:26px 0 0;display:flex;flex-direction:column;gap:12px}
+.md .audit-checks li{display:flex;gap:12px;font-size:15px;color:color-mix(in srgb,var(--bg) 86%,transparent)}
+.md .audit-checks .ck{font-family:var(--mono);color:var(--accent);flex:none}
+.md .audit-form{background:var(--card);color:var(--ink);border-radius:16px;padding:30px}
+.md .audit-form h3{font-size:22px;font-weight:800;margin:0 0 6px}
+.md .audit-form .sub{font-size:14px;color:var(--muted);margin-bottom:20px}
+.md .field{margin-bottom:16px}
+.md .field label{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.md .field input{width:100%;font-family:var(--sans);font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.md .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-weak)}
+.md .audit-form .btn{width:100%;justify-content:center}
+
+/* --- Подвал --- */
+.md .foot{border-top:1px solid var(--line-soft)}
+.md .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;padding:56px 0 40px}
+.md .foot-brand p{font-size:14px;color:var(--muted);max-width:30ch;margin:16px 0}
+.md .foot h4{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:0 0 16px}
+.md .foot li{margin-bottom:10px}
+.md .foot a{font-size:14.5px;color:var(--muted)}
+.md .foot a:hover{color:var(--accent)}
+.md .foot-bottom{border-top:1px solid var(--line-soft);padding:22px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+.md .proto-tag{position:fixed;left:16px;bottom:16px;z-index:80;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--grad);color:#fff;padding:8px 14px;border-radius:100px}
+
+@media (max-width:920px){
+  .md .nav-links{display:none}
+  .md .panel-grid,.md .audit-grid{grid-template-columns:1fr;gap:32px}
+  .md .grid--3,.md .grid--4,.md .steps,.md .prices,.md .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .md .foot-grid{grid-template-columns:1fr 1fr}
+  .md .fcard{width:140px}
+}
+@media (max-width:560px){
+  .md .grid--3,.md .grid--4,.md .steps,.md .prices,.md .stats-grid{grid-template-columns:1fr}
+  .md .foot-grid{grid-template-columns:1fr}
+  .md .story{height:260vh}
+  .md .story-metrics{gap:20px}
+}
+@media (prefers-reduced-motion:reduce){
+  .md *{animation:none!important;transition:none!important}
+  .md [data-rise]{opacity:1;transform:none}
+  .md .story{height:auto}
+  .md .story-pin{position:relative;height:auto;padding:90px 0 70px}
+  .md .story-h .h1{display:none}
+  .md .story-h .h2{opacity:1;transform:none;position:relative}
+  .md .story-outcome{position:relative;opacity:1;margin-top:28px}
+  .md .story-scroll-hint{display:none}
+  .md .funnel-svg .fn-fill{opacity:1}
+}
+</style>
+
+<div class="md">
+<div class="proto-tag">Прототип D · «Моушн»</div>
+
+<!-- ШАПКА -->
+<header class="hdr">
+  <div class="wrap nav">
+    <a class="logo" href="#">IN<span>—</span>CRM</a>
+    <nav class="nav-links"><a href="#uslugi">Услуги</a><a href="#keysy">Кейсы</a><a href="#otrasli">Отрасли</a><a href="#tarify">Тарифы</a><a href="#o-kompanii">О компании</a><a href="#blog">Блог</a><a href="#kontakty">Контакты</a></nav>
+    <div class="nav-right"><a class="phone" href="tel:+74012985505">+7 (4012) 98-55-05</a><a class="btn btn--accent" href="#audit">Аудит воронки</a></div>
+  </div>
+</header>
+
+<!-- ГЛАВНАЯ СЦЕНА: ХАОС → ВОРОНКА -->
+<section class="story" id="mdStory">
+  <div class="story-pin">
+    <div class="story-head">
+      <span class="eyebrow story-eyebrow"><span class="dot"></span>Сертифицированный партнёр amoCRM · Калининград</span>
+      <div class="story-h">
+        <span class="h1" id="mdH1">Заявки приходят отовсюду.</span>
+        <span class="h2" id="mdH2">Порядок в продажах. За 30 дней.</span>
+      </div>
+      <p class="story-sub" id="mdSubChaos">Сайт, звонки, WhatsApp, Instagram, почта, реклама — сейчас это хаос в разных вкладках</p>
+    </div>
+
+    <div class="story-field" id="mdField">
+      <svg class="funnel-svg" id="mdFunnel" viewBox="0 0 360 230" aria-hidden="true">
+        <defs>
+          <linearGradient id="mdFunnelGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#C6304B"/><stop offset="1" stop-color="#7E2434"/>
+          </linearGradient>
+          <linearGradient id="mdFunnelFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#C6304B" stop-opacity=".13"/>
+            <stop offset=".7" stop-color="#C6304B" stop-opacity=".05"/>
+            <stop offset="1" stop-color="#7E2434" stop-opacity=".02"/>
+          </linearGradient>
+        </defs>
+        <path class="fn-fill" d="M10,10 L350,10 L210,140 L210,210 L150,210 L150,140 Z"/>
+        <path class="fn-stroke" id="mdFunnelPath" d="M10,10 L350,10 L210,140 L210,210 L150,210 L150,140 Z"/>
+      </svg>
+      <div class="fcard" data-ch="0"><div class="ic">◐</div><div class="txt"><div class="nm">ООО «БалтТрейд»</div><div class="src">Сайт · форма</div></div></div>
+      <div class="fcard" data-ch="1"><div class="ic">☎</div><div class="txt"><div class="nm">ИП Соколов</div><div class="src">Звонок</div></div></div>
+      <div class="fcard" data-ch="2"><div class="ic">▤</div><div class="txt"><div class="nm">«Янтарь-Групп»</div><div class="src">WhatsApp</div></div></div>
+      <div class="fcard" data-ch="3"><div class="ic">◇</div><div class="txt"><div class="nm">«СтройМастер»</div><div class="src">Instagram</div></div></div>
+      <div class="fcard" data-ch="4"><div class="ic">✉</div><div class="txt"><div class="nm">«Оптима Логистик»</div><div class="src">Почта</div></div></div>
+      <div class="fcard" data-ch="5"><div class="ic">▣</div><div class="txt"><div class="nm">Клиника «Мед+»</div><div class="src">Реклама</div></div></div>
+    </div>
+
+    <div class="story-outcome" id="mdOutcome">
+      <p class="story-result">Все заявки — в одной воронке amoCRM. Ничего не теряется.</p>
+      <div class="story-metrics">
+        <div class="m"><div class="v tnum">0 потерь</div><div class="k">Заявок мимо воронки</div></div>
+        <div class="m"><div class="v tnum">1 окно</div><div class="k">Вместо шести вкладок</div></div>
+        <div class="m"><div class="v tnum">30 дней</div><div class="k">До готовой системы</div></div>
+      </div>
+    </div>
+
+    <div class="story-scroll-hint" id="mdHint"><span>Скролл</span><span class="ln"></span></div>
+  </div>
+</section>
+
+<main>
+  <!-- СТАТИСТИКА (тёмная вставка) -->
+  <section class="stats-dark">
+    <div class="wrap">
+      <div class="stats-grid">
+        <div class="stat-card" data-rise><div class="v tnum"><span data-count="45">0</span><span class="s">+</span></div><div class="k">Проектов внедрения</div></div>
+        <div class="stat-card" data-rise><div class="v tnum"><span data-count="17">0</span></div><div class="k">Городов присутствия</div></div>
+        <div class="stat-card" data-rise><div class="v tnum"><span data-count="30">0</span><span class="s"> дн</span></div><div class="k">До результата</div></div>
+        <div class="stat-card" data-rise><div class="v tnum"><span data-count="6">0</span><span class="s"> лет</span></div><div class="k">В интеграции amoCRM</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="marq" data-rise>
+      <div class="marq-track"><span>БалтТрейд</span><span>Янтарь-Групп</span><span>СтройМастер</span><span>Оптима Логистик</span><span>Клиника Мед+</span><span>Сеть «Уют»</span><span>АвтоДом</span><span>ТехноПроф</span><span>БалтТрейд</span><span>Янтарь-Групп</span><span>СтройМастер</span><span>Оптима Логистик</span><span>Клиника Мед+</span><span>Сеть «Уют»</span><span>АвтоДом</span><span>ТехноПроф</span></div>
+    </div>
+  </div>
+
+  <!-- УСЛУГИ -->
+  <section class="section diag" id="uslugi">
+    <div class="wrap">
+      <div class="s-head" data-rise><h2>Услуги</h2><span class="eyebrow">Что настраиваем</span></div>
+      <div class="tabs" data-rise>
+        <button class="tab active" data-tab="0">Внедрение</button><button class="tab" data-tab="1">Интеграции</button><button class="tab" data-tab="2">Виджеты</button><button class="tab" data-tab="3">Аналитика</button><button class="tab" data-tab="4">Обучение</button><button class="tab" data-tab="5">Сопровождение</button>
+      </div>
+      <div data-rise>
+        <div class="panel active"><div class="panel-grid"><div><h3>Внедрение amoCRM</h3><p>Настроим воронки, поля и логику под ваш реальный процесс продаж — чтобы менеджеры работали в системе, а не мимо неё.</p><ul class="checklist"><li><span class="ck">01</span> Аудит и проектирование воронки</li><li><span class="ck">02</span> Настройка этапов, полей и прав доступа</li><li><span class="ck">03</span> Автозадачи и напоминания</li></ul></div><div class="panel-visual"><div class="kpi-row"><span class="kv">+38%</span><span class="kk">заявки перестают теряться</span></div><div class="kpi-row"><span class="kv">×2</span><span class="kk">скорость обработки лида</span></div></div></div></div>
+        <div class="panel"><div class="panel-grid"><div><h3>Интеграции</h3><p>Телефония, сайт, 1С, почта и мессенджеры — все заявки в одной воронке. Ни один лид не теряется между каналами.</p><ul class="checklist"><li><span class="ck">01</span> IP-телефония с записью звонков</li><li><span class="ck">02</span> Сайт, WhatsApp, Telegram, VK</li><li><span class="ck">03</span> Обмен с 1С без двойного ввода</li></ul></div><div class="panel-visual"><div class="kpi-row"><span class="kv">5+</span><span class="kk">каналов в одной воронке</span></div><div class="kpi-row"><span class="kv">−90%</span><span class="kk">потерь лидов между каналами</span></div></div></div></div>
+        <div class="panel"><div class="panel-grid"><div><h3>Виджеты и автоматизация</h3><p>Разработаем то, чего нет из коробки, под ваши задачи: логика, интерфейсы, интеграции с внутренними сервисами.</p><ul class="checklist"><li><span class="ck">01</span> Виджеты под ваш процесс</li><li><span class="ck">02</span> Автоматизация рутины</li><li><span class="ck">03</span> Связка с внешними системами по API</li></ul></div><div class="panel-visual"><div class="kpi-row"><span class="kv">−60%</span><span class="kk">ручных операций менеджера</span></div><div class="kpi-row"><span class="kv">−30%</span><span class="kk">времени на рутину</span></div></div></div></div>
+        <div class="panel"><div class="panel-grid"><div><h3>Сквозная аналитика</h3><p>Видно, откуда заявки, где теряются деньги и какая реклама окупается. Решения — на данных, а не на ощущениях.</p><ul class="checklist"><li><span class="ck">01</span> Источники заявок и ROI рекламы</li><li><span class="ck">02</span> Дашборды по воронке и менеджерам</li><li><span class="ck">03</span> Отчёты, которые реально читают</li></ul></div><div class="panel-visual"><div class="kpi-row"><span class="kv">ROI</span><span class="kk">видна окупаемость канала</span></div><div class="kpi-row"><span class="kv">0</span><span class="kk">слепых зон в продажах</span></div></div></div></div>
+        <div class="panel"><div class="panel-grid"><div><h3>Обучение команды</h3><p>Научим менеджеров работать в системе, а руководителей — читать аналитику и управлять воронкой.</p><ul class="checklist"><li><span class="ck">01</span> Обучение менеджеров и РОПа</li><li><span class="ck">02</span> Регламенты и видеоинструкции</li><li><span class="ck">03</span> Поддержка на этапе адаптации</li></ul></div><div class="panel-visual"><div class="kpi-row"><span class="kv">100%</span><span class="kk">команда работает в CRM</span></div><div class="kpi-row"><span class="kv">×2</span><span class="kk">скорость адаптации</span></div></div></div></div>
+        <div class="panel"><div class="panel-grid"><div><h3>Сопровождение</h3><p>Дорабатываем и держим систему в форме после запуска: новые сценарии, доработки, поддержка команды.</p><ul class="checklist"><li><span class="ck">01</span> Доработки и новые сценарии</li><li><span class="ck">02</span> Приоритетная поддержка</li><li><span class="ck">03</span> Регулярный аудит системы</li></ul></div><div class="panel-visual"><div class="kpi-row"><span class="kv">24/7</span><span class="kk">система под присмотром</span></div><div class="kpi-row"><span class="kv">&lt;1 дня</span><span class="kk">время реакции</span></div></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПРОЦЕСС -->
+  <section class="section section--panel diag diag--panel" id="otrasli">
+    <div class="wrap">
+      <div class="s-head" data-rise><h2>Как проходит внедрение</h2><span class="eyebrow">30 дней · 4 недели</span></div>
+      <div class="steps">
+        <div class="step" data-rise><span class="no">01</span><span class="wk">Неделя 1</span><h3>Аудит и проект</h3><p>Разбираем процесс продаж, проектируем воронку и карту интеграций.</p></div>
+        <div class="step" data-rise><span class="no">02</span><span class="wk">Неделя 2</span><h3>Настройка</h3><p>Собираем воронки, поля, права доступа и автозадачи.</p></div>
+        <div class="step" data-rise><span class="no">03</span><span class="wk">Неделя 3</span><h3>Интеграции</h3><p>Подключаем телефонию, сайт, 1С, мессенджеры и виджеты.</p></div>
+        <div class="step" data-rise><span class="no">04</span><span class="wk">Неделя 4</span><h3>Обучение и запуск</h3><p>Учим команду, переносим данные и выводим систему в работу.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- КЕЙСЫ -->
+  <section class="section diag" id="keysy">
+    <div class="wrap">
+      <div class="s-head" data-rise><h2>Кейсы</h2><a class="link" href="#">Все кейсы →</a></div>
+      <div class="grid grid--3">
+        <a class="card card--case card--hover" data-rise href="#"><span class="tag">Оптовая торговля</span><h3>Собрали заявки из 5 каналов в одну воронку</h3><p>Лиды терялись между сайтом, почтой и мессенджерами — стало единое окно.</p><div class="meta"><span>Заявок</span><b>+38%</b></div></a>
+        <a class="card card--case card--hover" data-rise href="#"><span class="tag">Услуги</span><h3>Автоматизировали контроль менеджеров</h3><p>Автозадачи и напоминания на каждом этапе — сделки перестали «зависать».</p><div class="meta"><span>Цикл сделки</span><b>−50%</b></div></a>
+        <a class="card card--case card--hover" data-rise href="#"><span class="tag">Производство</span><h3>Связали amoCRM с 1С и телефонией</h3><p>Двойной ввод данных исчез, обработка заявки ускорилась вдвое.</p><div class="meta"><span>Конверсия</span><b>+40%</b></div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ТАРИФЫ -->
+  <section class="section section--panel diag diag--panel" id="tarify">
+    <div class="wrap">
+      <div class="s-head" data-rise><h2>Тарифы</h2><span class="eyebrow">Цены сразу</span></div>
+      <div class="prices">
+        <div class="price" data-rise><span class="plan">Базовый</span><div class="amount tnum">80 000<span class="cur"> ₽</span></div><span class="note">разовая настройка «под ключ»</span><ul><li>Анализ процессов продаж</li><li>Настройка воронок и этапов</li><li>Обучение сотрудников</li></ul><a href="#audit" class="btn btn--ghost">Выбрать тариф</a></div>
+        <div class="price price--featured" data-rise><span class="plan">Оптимальный</span><div class="amount tnum">90 000<span class="cur"> ₽</span></div><span class="note">разовая настройка «под ключ»</span><ul><li>Всё из тарифа «Базовый»</li><li>Интеграция с сайтом</li><li>Интеграция с телефонией</li></ul><a href="#audit" class="btn btn--accent">Выбрать тариф</a></div>
+        <div class="price" data-rise><span class="plan">Индивидуальный</span><div class="amount tnum">от 120 000<span class="cur"> ₽</span></div><span class="note">по итогам консалтинга</span><ul><li>Консалтинг процессов продаж</li><li>Виджеты под ваши задачи</li><li>Приоритетное сопровождение</li></ul><a href="#audit" class="btn btn--ghost">Обсудить проект</a></div>
+      </div>
+      <p class="muted" style="margin-top:24px;font-size:15px">Лицензии amoCRM — от 999 ₽/мес за пользователя. Подберём тариф под ваш отдел.</p>
+    </div>
+  </section>
+
+  <!-- КОМАНДА -->
+  <section class="section diag" id="o-kompanii">
+    <div class="wrap">
+      <div class="s-head" data-rise><h2>С вами работают эксперты</h2><span class="eyebrow">Команда</span></div>
+      <div class="grid grid--4">
+        <article class="card card--team card--hover" data-rise><div class="ava">АК</div><h3>Алексей Кравцов</h3><div class="role">Руководитель</div><p>Отвечает за внедрение и результат клиента.</p></article>
+        <article class="card card--team card--hover" data-rise><div class="ava">МС</div><h3>Мария Соколова</h3><div class="role">Бизнес-аналитик</div><p>Проектирует воронки и логику автоматизаций.</p></article>
+        <article class="card card--team card--hover" data-rise><div class="ava">ДВ</div><h3>Дмитрий Волков</h3><div class="role">Разработчик</div><p>Пишет виджеты и связывает CRM с 1С и сайтом.</p></article>
+        <article class="card card--team card--hover" data-rise><div class="ava">ЕЛ</div><h3>Елена Лебедева</h3><div class="role">Тренер</div><p>Обучает команды и внедряет культуру работы в CRM.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ОТЗЫВЫ -->
+  <section class="section section--panel diag diag--panel" id="blog">
+    <div class="wrap">
+      <div class="s-head" data-rise><h2>Что говорят клиенты</h2><span class="eyebrow">Отзывы</span></div>
+      <div class="grid grid--3">
+        <article class="card card--review" data-rise><div class="stars">★★★★★</div><blockquote>«За месяц навели порядок в заявках. Раньше теряли клиентов из мессенджеров — теперь всё в одной воронке, конверсия выросла.»</blockquote><div class="who"><span class="ava">ИП</span><div><b>Игорь Петров</b><span>директор, «БалтТрейд»</span></div></div></article>
+        <article class="card card--review" data-rise><div class="stars">★★★★★</div><blockquote>«Понравилась прозрачность: сразу озвучили цену и состав работ. Внедрение уложилось в 30 дней, менеджеры реально пользуются системой.»</blockquote><div class="who"><span class="ava">ОН</span><div><b>Ольга Наумова</b><span>РОП, «Янтарь-Групп»</span></div></div></article>
+        <article class="card card--review" data-rise><div class="stars">★★★★★</div><blockquote>«Связали amoCRM с 1С и сайтом — двойной ввод данных исчез. Время на обработку заявки сократилось вдвое.»</blockquote><div class="who"><span class="ava">СК</span><div><b>Сергей Козлов</b><span>владелец, «СтройМастер»</span></div></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section diag">
+    <div class="wrap">
+      <div class="s-head" data-rise><h2>Частые вопросы</h2></div>
+      <div class="faq">
+        <div class="faq__item open"><button class="faq__q">Сколько занимает внедрение?</button><div class="faq__a"><p>В среднем 30 дней: от аудита до запуска системы в боевом режиме. Точный срок зависит от количества интеграций.</p></div></div>
+        <div class="faq__item"><button class="faq__q">Даёте ли вы гарантии на результат?</button><div class="faq__a"><p>Да. Доводим внедрение до работающей системы и сопровождаем после запуска, пока команда не начнёт уверенно работать в CRM.</p></div></div>
+        <div class="faq__item"><button class="faq__q">Что входит в стоимость тарифа?</button><div class="faq__a"><p>Настройка воронок и полей, обучение сотрудников, а на старших тарифах — интеграции с сайтом и телефонией.</p></div></div>
+        <div class="faq__item"><button class="faq__q">Нужно ли отдельно платить за лицензии amoCRM?</button><div class="faq__a"><p>Да, лицензии оплачиваются отдельно — от 999 ₽/мес за пользователя. Подберём оптимальный тариф под ваш отдел.</p></div></div>
+        <div class="faq__item"><button class="faq__q">Что с поддержкой после запуска?</button><div class="faq__a"><p>Есть отдельная услуга сопровождения: дорабатываем систему, добавляем новые сценарии и держим её в форме.</p></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- АУДИТ -->
+<section class="audit" id="audit">
+  <div class="wrap audit-grid">
+    <div data-rise>
+      <span class="eyebrow" style="color:var(--bg);opacity:.7">Бесплатно и без обязательств</span>
+      <h2 style="margin-top:14px">Бесплатный аудит вашей воронки продаж</h2>
+      <p class="lead">За 30 минут покажем, где вы теряете заявки и деньги, и дадим конкретный план внедрения amoCRM — со сроками и ценой.</p>
+      <ul class="audit-checks">
+        <li><span class="ck">01</span> Разберём ваш текущий процесс продаж по этапам</li>
+        <li><span class="ck">02</span> Найдём, где именно теряются заявки</li>
+        <li><span class="ck">03</span> Дадим план внедрения со сроками и ценой</li>
+      </ul>
+    </div>
+    <form class="audit-form" data-rise onsubmit="return false">
+      <h3>Записаться на аудит</h3>
+      <p class="sub">Перезвоним в течение рабочего дня.</p>
+      <div class="field"><label>Ваше имя</label><input type="text" placeholder="Иван"></div>
+      <div class="field"><label>Телефон</label><input type="tel" placeholder="+7 (___) ___-__-__"></div>
+      <button type="submit" class="btn btn--accent">Получить аудит <span class="arw">→</span></button>
+    </form>
+  </div>
+</section>
+
+<!-- ПОДВАЛ -->
+<footer class="foot" id="kontakty">
+  <div class="wrap foot-grid">
+    <div class="foot-brand"><a class="logo" href="#">IN<span>—</span>CRM</a><p>Сертифицированный партнёр amoCRM. Экспертная автоматизация продаж за 30 дней.</p></div>
+    <div class="foot"><h4>Услуги</h4><ul><li><a href="#">Внедрение amoCRM</a></li><li><a href="#">Интеграции</a></li><li><a href="#">Виджеты</a></li><li><a href="#">Обучение</a></li><li><a href="#">Сопровождение</a></li></ul></div>
+    <div class="foot"><h4>Компания</h4><ul><li><a href="#">Кейсы</a></li><li><a href="#">Тарифы</a></li><li><a href="#">Отрасли</a></li><li><a href="#">Блог</a></li><li><a href="#">Контакты</a></li></ul></div>
+    <div class="foot"><h4>Контакты</h4><ul><li><a href="tel:+74012985505">+7 (4012) 98-55-05</a></li><li><a href="mailto:info@in-crm.ru">info@in-crm.ru</a></li><li>г. Калининград</li></ul></div>
+  </div>
+  <div class="wrap foot-bottom"><span>© 2026 In-CRM · Сертифицированный партнёр amoCRM</span><a href="#">Политика конфиденциальности</a></div>
+</footer>
+</div>
+
+<script>
+(function(){
+  var root=document.querySelector('.md');
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  /* reveal */
+  var rises=root.querySelectorAll('[data-rise]');
+  if(reduce){rises.forEach(function(el){el.classList.add('in')});}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+      var sibs=[].slice.call(e.target.parentNode.children).filter(function(c){return c.hasAttribute('data-rise')});
+      e.target.style.transitionDelay=(Math.max(0,sibs.indexOf(e.target))*70)+'ms';
+      e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.14,rootMargin:'0px 0px -8% 0px'});
+    rises.forEach(function(el){io.observe(el)});
+  }
+
+  var tabs=root.querySelectorAll('.tab'),panels=root.querySelectorAll('.panel');
+  tabs.forEach(function(t){t.addEventListener('click',function(){var i=+t.getAttribute('data-tab');
+    tabs.forEach(function(x){x.classList.remove('active')});t.classList.add('active');
+    panels.forEach(function(p){p.classList.remove('active')});panels[i].classList.add('active');});});
+
+  root.querySelectorAll('.faq__q').forEach(function(q){q.addEventListener('click',function(){q.parentNode.classList.toggle('open');});});
+
+  /* счётчики статистики */
+  var counters=root.querySelectorAll('[data-count]');
+  var cio=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;cio.unobserve(e.target);
+      var el=e.target,to=+el.getAttribute('data-count');
+      if(reduce){el.textContent=to;return;}
+      var t0=null,dur=1100;
+      function tick(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/dur);
+        el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(tick);}
+      requestAnimationFrame(tick);
+    });
+  },{threshold:.6});
+  counters.forEach(function(el){cio.observe(el)});
+
+  /* ====== SCROLL-STORY: хаос → воронка ====== */
+  if(reduce)return;
+
+  var story=document.getElementById('mdStory');
+  var field=document.getElementById('mdField');
+  var cards=Array.prototype.slice.call(field.querySelectorAll('.fcard'));
+  var funnelPath=document.getElementById('mdFunnelPath');
+  var funnelSvg=document.getElementById('mdFunnel');
+  var h1=document.getElementById('mdH1'), h2=document.getElementById('mdH2');
+  var subChaos=document.getElementById('mdSubChaos');
+  var outcome=document.getElementById('mdOutcome');
+  var hint=document.getElementById('mdHint');
+
+  /* стартовые (хаос) позиции — разброс по полю в %, случайный поворот */
+  var starts=[
+    {x:-38,y:-30,r:-14},{x:34,y:-36,r:10},{x:-42,y:14,r:8},
+    {x:40,y:8,r:-9},{x:-16,y:38,r:13},{x:20,y:40,r:-11}
+  ];
+  /* финальные позиции — аккуратный столбик внутри воронки */
+  var ends=[
+    {x:0,y:-30,r:0},{x:0,y:-23,r:0},{x:0,y:-16,r:0},
+    {x:0,y:-9,r:0},{x:0,y:-2,r:0},{x:0,y:5,r:0}
+  ];
+
+  var fieldLen=null; // длина пути воронки для draw-эффекта
+  try{fieldLen=funnelPath.getTotalLength();}catch(e){fieldLen=760;}
+  funnelPath.style.strokeDasharray=fieldLen;
+  funnelPath.style.strokeDashoffset=fieldLen;
+
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function clamp01(v){return Math.max(0,Math.min(1,v));}
+  function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+
+  var raf=null;
+  function update(){
+    raf=null;
+    var rect=story.getBoundingClientRect();
+    var total=rect.height-window.innerHeight;
+    var p=clamp01(-rect.top/Math.max(1,total));
+
+    /* фазы: 0–.62 разъезд по местам, .62–.82 текст/метрики, .82–1 удержание */
+    var moveP=ease(clamp01(p/0.62));
+    var fw=field.getBoundingClientRect().width, fh=field.getBoundingClientRect().height;
+    cards.forEach(function(c,i){
+      var s=starts[i], en=ends[i];
+      var x=lerp(s.x,en.x,moveP), y=lerp(s.y,en.y,moveP), r=lerp(s.r,en.r,moveP);
+      var sc=lerp(1,0.78,moveP);
+      var px=x/100*fw, py=y/100*fh;
+      c.style.transform='translate(calc(-50% + '+px+'px), calc(-50% + '+py+'px)) rotate('+r+'deg) scale('+sc+')';
+      c.style.opacity=String(lerp(.55,1,moveP));
+      c.style.zIndex=10-i;
+    });
+
+    funnelPath.style.strokeDashoffset=String(fieldLen*(1-clamp01(p/0.68)));
+
+    var textP=clamp01((p-0.5)/0.22);
+    h1.style.opacity=String(1-textP); h1.style.transform='translateY('+(-textP*14)+'px)';
+    h2.style.opacity=String(textP); h2.style.transform='translateY('+((1-textP)*14)+'px)';
+    subChaos.style.opacity=String(1-textP);
+
+    if(p>0.66){outcome.classList.add('show');funnelSvg.classList.add('lit');}
+    else{outcome.classList.remove('show');funnelSvg.classList.remove('lit');}
+    hint.style.opacity=p>0.06?'0':'1';
+  }
+  function onScroll(){ if(!raf) raf=requestAnimationFrame(update); }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  update();
+})();
+</script>

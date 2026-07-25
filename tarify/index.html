@@ -58,17 +58,24 @@
 
 <main>
   <section class="page-hero">
-    <div class="wrap">
-      <span class="label">Без «рассчитаем после звонка»</span>
-      <h1>Тарифы</h1>
-      <p class="lead">Цену внедрения на рынке чаще всего скрывают до звонка менеджера. Мы публикуем её сразу — выбирайте тариф или начните с бесплатного аудита, если не уверены, что вам нужно.</p>
+    <div class="wrap page-hero-grid">
+      <div data-rise>
+        <span class="label">Без «рассчитаем после звонка»</span>
+        <h1>Тарифы</h1>
+        <p class="lead">Цену внедрения на рынке чаще всего скрывают до звонка менеджера. Мы публикуем её сразу — выбирайте тариф или начните с бесплатного аудита, если не уверены, что вам нужно.</p>
+      </div>
+      <div data-rise class="mini-scene" aria-hidden="true">
+        <div class="ms-head"><span class="t">Окупаемость внедрения</span><span class="pill">30 дней</span></div>
+        <div class="mini-bars"><i style="--h:32%"></i><i style="--h:48%"></i><i style="--h:41%"></i><i style="--h:63%"></i><i style="--h:79%"></i><i style="--h:96%"></i></div>
+        <div class="ms-foot"><span>Старт</span><span>Рост выручки после запуска</span></div>
+      </div>
     </div>
   </section>
 
   <section class="section" style="padding-top:0">
     <div class="wrap">
       <div class="grid grid--3">
-        <div class="price">
+        <div data-rise class="price">
           <span class="plan">Базовый</span>
           <div class="amount tnum">80 000<span class="cur"> ₽</span></div>
           <span class="note">разовая настройка «под ключ»</span>
@@ -80,7 +87,7 @@
           </ul>
           <a href="#zayavka" class="btn btn--ghost">Выбрать тариф</a>
         </div>
-        <div class="price price--featured">
+        <div data-rise class="price price--featured">
           <span class="plan">Оптимальный</span>
           <div class="amount tnum">90 000<span class="cur"> ₽</span></div>
           <span class="note">разовая настройка «под ключ»</span>
@@ -92,7 +99,7 @@
           </ul>
           <a href="#zayavka" class="btn btn--accent">Выбрать тариф</a>
         </div>
-        <div class="price">
+        <div data-rise class="price">
           <span class="plan">Индивидуальный</span>
           <div class="amount tnum">от 120 000<span class="cur"> ₽</span></div>
           <span class="note">по итогам консалтинга</span>
@@ -108,9 +115,9 @@
     </div>
   </section>
 
-  <section class="section section--panel" style="padding-top:0">
+  <section class="section section--panel diag diag--panel" style="padding-top:0">
     <div class="wrap">
-      <div class="section-head"><h2>Лицензии amoCRM</h2><span class="label">Оплачиваются отдельно</span></div>
+      <div data-rise class="section-head"><h2>Лицензии amoCRM</h2><span class="label">Оплачиваются отдельно</span></div>
       <p class="lead" style="margin-bottom:32px">Тарифы выше — это стоимость нашей работы по настройке. Сама платформа amoCRM оплачивается отдельно, напрямую в amoCRM, по числу пользователей.</p>
       <div class="grid grid--3">
         <div class="card">
@@ -135,8 +142,8 @@
 
   <section class="section">
     <div class="wrap" style="max-width:820px">
-      <div class="section-head"><h2>Частые вопросы</h2></div>
-      <div class="faq">
+      <div data-rise class="section-head"><h2>Частые вопросы</h2></div>
+      <div data-rise class="faq">
         <div class="faq__item open"><button class="faq__q">Что входит в стоимость тарифа?</button><div class="faq__a"><p>Настройка воронок и полей, перенос данных, обучение сотрудников — на «Базовом». На «Оптимальном» и «Индивидуальном» дополнительно включены интеграции и консалтинг. Полный состав указан в карточке каждого тарифа.</p></div></div>
         <div class="faq__item"><button class="faq__q">Нужно ли отдельно платить за лицензии amoCRM?</button><div class="faq__a"><p>Да, лицензии оплачиваются отдельно — напрямую в amoCRM, от 999 ₽ в месяц за пользователя. Мы поможем подобрать оптимальный тариф лицензий под размер отдела.</p></div></div>
         <div class="faq__item"><button class="faq__q">Можно ли перейти с Базового тарифа на Оптимальный позже?</button><div class="faq__a"><p>Да, донастроим интеграции отдельно в любой момент — доплата составит разницу между тарифами.</p></div></div>
@@ -153,7 +160,7 @@
       <h2 style="margin-top:14px">Начните с бесплатного аудита</h2>
       <p class="lead">За 30 минут разберём вашу воронку и подскажем, какой тариф закроет задачи без переплаты.</p>
     </div>
-    <form class="form audit-form" data-demo>
+    <form data-rise class="form audit-form" data-demo>
       <h3>Записаться на аудит</h3>
       <p class="sub">Перезвоним в течение рабочего дня.</p>
       <div class="field"><label>Ваше имя</label><input type="text" placeholder="Иван" required></div>
