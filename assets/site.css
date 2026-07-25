@@ -208,6 +208,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   display:flex;align-items:center;gap:7px;will-change:transform,opacity}
 .fcard .ic{width:18px;height:18px;border-radius:6px;background:var(--accent-weak);color:var(--accent);
   display:flex;align-items:center;justify-content:center;font-size:10px;flex:none}
+.fcard .ic svg{width:12px;height:12px}
 .fcard .txt{min-width:0}
 .fcard .nm{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fcard .src{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:1px}
