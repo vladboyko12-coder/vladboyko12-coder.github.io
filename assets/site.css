@@ -253,7 +253,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 
 /* --- Тёмная вставка со статистикой ---------------------------------------- */
 .stats-dark{background:var(--ink);color:var(--bg);position:relative;overflow:hidden;
-  padding:clamp(44px,6vw,68px) 0}
+  padding:clamp(32px,4vw,46px) 0}
 .stats-dark::before{content:"";position:absolute;inset:0;pointer-events:none;
   background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
                    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
@@ -262,18 +262,18 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   -webkit-mask-image:radial-gradient(ellipse 90% 100% at 50% 0%,#000 50%,transparent 92%)}
 .stats-dark .wrap{position:relative;z-index:1}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.stat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:14px;
-  padding:26px 24px;transition:transform .2s ease,border-color .2s ease}
+.stat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:12px;
+  padding:18px 20px;transition:transform .2s ease,border-color .2s ease}
 .stat-card:hover{transform:translateY(-4px);border-color:rgba(198,48,75,.5)}
-.stat-card .v{font-size:clamp(32px,4vw,44px);font-weight:900;letter-spacing:-.02em;color:#fff;
-  display:flex;align-items:baseline;gap:4px}
+.stat-card .v{font-size:clamp(28px,3.2vw,36px);font-weight:900;letter-spacing:-.02em;color:#fff;
+  display:flex;align-items:baseline;gap:4px;line-height:1}
 .stat-card .v .s{background:linear-gradient(135deg,var(--accent),#F0748C);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.stat-card .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(255,255,255,.5);margin-top:14px}
+.stat-card .k{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);margin-top:9px}
 
 /* Логотипы клиентов внутри тёмного блока — продолжение той же мысли */
-.stats-dark .marq{margin-top:clamp(28px,4vw,44px);padding:clamp(24px,3vw,32px) 0 0;
+.stats-dark .marq{margin-top:clamp(20px,2.6vw,28px);padding:clamp(18px,2.2vw,24px) 0 0;
   border-top:1px solid rgba(255,255,255,.09);border-bottom:0;
   /* края уводим в тень, чтобы строка не обрывалась резко */
   mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
