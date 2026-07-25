@@ -506,19 +506,21 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 /* --- Адаптив ---------------------------------------------------------------- */
 /* --- Этапы на мобильном: таймлайн с заполняющейся линией ------------------ */
 @media (max-width:720px){
-  .steps{grid-template-columns:1fr;gap:0;position:relative;padding-left:46px}
-  /* дорожка */
-  .steps::before{content:"";position:absolute;left:17px;top:10px;bottom:34px;width:2px;
-    background:var(--line);border-radius:2px}
-  /* заполнение дорожки */
-  .steps::after{content:"";position:absolute;left:17px;top:10px;bottom:34px;width:2px;
-    background:var(--grad);border-radius:2px;transform:scaleY(0);transform-origin:top;
-    transition:transform 1.8s cubic-bezier(.3,.7,.3,1)}
-  .steps.in::after{transform:scaleY(1)}
+  .steps{grid-template-columns:1fr;gap:0;padding-left:46px}
 
   .step{background:transparent;border:0;box-shadow:none;padding:0 0 30px;position:relative}
   .step:hover{transform:none}
   .step:last-child{padding-bottom:0}
+
+  /* Отрезок дорожки живёт внутри своего шага — поэтому едет вместе с ним
+     при появлении и всегда состыкован с кружком (центр кружка = -28px). */
+  .step:not(:last-child)::after{content:"";position:absolute;left:-29px;top:34px;bottom:0;
+    width:2px;background:var(--line);border-radius:2px}
+  .step:not(:last-child)::before{content:"";position:absolute;left:-29px;top:34px;bottom:0;
+    width:2px;background:var(--grad);border-radius:2px;z-index:1;
+    transform:scaleY(0);transform-origin:top;
+    transition:transform .8s cubic-bezier(.3,.7,.3,1) .15s}
+  .step.in:not(:last-child)::before{transform:scaleY(1)}
   /* номер — кружок на линии */
   .step .no{position:absolute;left:-46px;top:-2px;width:36px;height:36px;border-radius:50%;
     background:var(--card);border:2px solid var(--line);color:var(--muted);
