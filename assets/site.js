@@ -171,13 +171,8 @@
   function clamp01(v) { return Math.max(0, Math.min(1, v)); }
   function ease(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
 
-  var raf = null;
-  function update() {
-    raf = null;
-    var rect = story.getBoundingClientRect();
-    var total = rect.height - window.innerHeight;
-    var p = clamp01(-rect.top / Math.max(1, total));
-
+  // Отрисовка кадра сцены по прогрессу p (0 — хаос, 1 — порядок)
+  function render(p) {
     // 0–.62 — карточки съезжаются; .5–.72 — смена заголовка; >.66 — вывод и свечение
     var moveP = ease(clamp01(p / 0.62));
     var fw = field.getBoundingClientRect().width;
@@ -212,8 +207,55 @@
     if (hint) hint.style.opacity = p > 0.06 ? "0" : "1";
   }
 
+  var MOBILE = window.matchMedia("(max-width:720px)");
+
+  /* --- Мобильный: сцена проигрывается сама, без залипания на скролле ------- */
+  var played = false;
+  function playScene() {
+    if (played) return;
+    played = true;
+    var t0 = null, dur = 2400;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      render(p);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* --- Десктоп: прогресс привязан к скроллу -------------------------------- */
+  var raf = null;
+  function update() {
+    raf = null;
+    var rect = story.getBoundingClientRect();
+    var total = rect.height - window.innerHeight;
+    render(clamp01(-rect.top / Math.max(1, total)));
+  }
   function onScroll() { if (!raf) raf = requestAnimationFrame(update); }
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
-  update();
+
+  var sceneObserver = null;
+  function setMode() {
+    window.removeEventListener("scroll", onScroll);
+    if (sceneObserver) { sceneObserver.disconnect(); sceneObserver = null; }
+
+    if (MOBILE.matches) {
+      render(0);
+      sceneObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) playScene(); });
+      }, { threshold: 0.3 });
+      sceneObserver.observe(story);
+    } else {
+      played = false;
+      window.addEventListener("scroll", onScroll, { passive: true });
+      update();
+    }
+  }
+
+  setMode();
+  window.addEventListener("resize", function () {
+    if (!MOBILE.matches && !raf) raf = requestAnimationFrame(update);
+  });
+  if (MOBILE.addEventListener) MOBILE.addEventListener("change", setMode);
+  else if (MOBILE.addListener) MOBILE.addListener(setMode);
 })();
