@@ -433,6 +433,34 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .card--review .who b{display:block;font-size:15px}
 .card--review .who span{font-size:13px;color:var(--muted)}
 
+/* --- Кейсы строками (главная) --------------------------------------------- */
+.cases-list{border-top:1px solid var(--line)}
+.case-row{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.6fr) auto;
+  gap:clamp(18px,3.5vw,44px);align-items:center;
+  padding:clamp(22px,3vw,32px) 0;border-bottom:1px solid var(--line);
+  transition:background .22s ease,padding .22s ease}
+.case-row:hover{background:var(--card);padding-left:16px;padding-right:16px}
+.case-row:active{background:var(--bg2)}
+.case-row .tag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent)}
+.case-row h3{font-size:clamp(18px,1.9vw,23px);font-weight:800;margin-bottom:7px}
+.case-row p{font-size:15px;color:var(--muted);line-height:1.5}
+.case-row .res{text-align:right;white-space:nowrap}
+.case-row .res b{display:block;font-size:clamp(28px,3.4vw,40px);font-weight:900;
+  letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent}
+.case-row .res span{display:block;font-family:var(--mono);font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:7px}
+
+@media (max-width:720px){
+  .case-row{grid-template-columns:1fr auto;gap:14px 18px;align-items:start}
+  .case-row .tag{grid-column:1 / -1}
+  .case-row .res{text-align:right;align-self:center}
+  .case-row p{grid-column:1 / -1;margin-top:-4px}
+  .case-row:hover{padding-left:0;padding-right:0;background:transparent}
+}
+
 /* --- Тарифы --------------------------------------------------------------- */
 .prices{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .price{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 28px;
