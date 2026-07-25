@@ -195,7 +195,11 @@
     hChaos.style.transform = "translateY(" + (-textP * 14) + "px)";
     hOrder.style.opacity = String(textP);
     hOrder.style.transform = "translateY(" + ((1 - textP) * 14) + "px)";
-    if (sub) sub.style.opacity = String(1 - textP);
+    if (sub) {
+      sub.style.opacity = String(1 - textP);
+      // схлопываем высоту, чтобы после исчезновения не оставалось пустоты
+      sub.classList.toggle("is-collapsed", textP > 0.8);
+    }
 
     if (p > 0.66) {
       outcome.classList.add("show");

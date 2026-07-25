@@ -133,7 +133,11 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .story-h .h-chaos{color:var(--faint);display:none}
 .story-h .h-order{background:var(--grad);-webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent}
-.story-sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);margin-top:18px}
+.story-sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);margin-top:18px;
+  max-height:140px;overflow:hidden;
+  transition:opacity .45s ease,max-height .45s ease,margin-top .45s ease}
+/* когда сцена доиграла — текст не просто гаснет, а освобождает место */
+.story-sub.is-collapsed{max-height:0;margin-top:0}
 
 .story-outcome{position:absolute;bottom:clamp(48px,8vh,84px);left:0;right:0;text-align:center;
   padding:0 20px;z-index:5;transition:opacity .6s ease}
