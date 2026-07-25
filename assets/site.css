@@ -56,7 +56,8 @@
   --card:#FFFFFF;                   /* поверхность карточек */
   --ink:#1B1216;                    /* основной текст */
   --muted:#6B5F63;                  /* приглушённый текст */
-  --faint:#A79C9F;                  /* самый тихий текст, подписи */
+  --faint:#7A6E71;                  /* тихий текст, подписи — контраст 4.6:1 */
+  --faint-deco:#A79C9F;             /* только для декора: линии, неактивные штрихи */
   --line:rgba(27,18,22,.12);        /* линия-разделитель */
   --line-soft:rgba(27,18,22,.07);   /* тонкая линия */
   --accent:#C6304B;                 /* бордо — акцент */
@@ -133,6 +134,10 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .btn:hover{transform:translateY(-2px) rotate(-.4deg)}
 .btn .arw{transition:transform .2s}
 .btn:hover .arw{transform:translateX(4px)}
+.btn:active{transform:translateY(0) scale(.98)}
+.card--hover:active{transform:translateY(-2px) scale(.99)}
+.tab:active,.filter-bar button:active,.related-list a:active{transform:scale(.97)}
+.faq__q:active{opacity:.7}
 .btn--accent{background:var(--grad);border-color:transparent;color:#fff}
 .btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
 .btn--ghost:hover{border-color:var(--ink)}
@@ -145,6 +150,11 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   padding:22px 0;display:flex;gap:10px;flex-wrap:wrap}
 .breadcrumbs a:hover{color:var(--accent)}
 .breadcrumbs .sep{color:var(--faint)}
+
+/* --- Пропустить навигацию (для клавиатуры и скринридеров) ------------------ */
+.skip-link{position:absolute;left:-9999px;top:0;z-index:100;background:var(--ink);color:var(--bg);
+  padding:12px 20px;border-radius:0 0 10px 0;font-weight:700;font-size:15px}
+.skip-link:focus{left:0}
 
 /* --- Шапка сайта ---------------------------------------------------------- */
 .site-header{position:sticky;top:0;z-index:60;border-bottom:1px solid var(--line-soft);
@@ -167,7 +177,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
    ГЛАВНАЯ: сцена «хаос → воронка»
    ========================================================================== */
 .story{position:relative;height:340vh}
-.story-pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;
+.story-pin{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;display:flex;align-items:center;
   justify-content:center;background:radial-gradient(120% 90% at 50% 15%,var(--bg2),var(--bg) 65%)}
 .story-head{position:absolute;top:clamp(88px,11vh,120px);left:0;right:0;text-align:center;z-index:5;padding:0 20px}
 .story-eyebrow{margin-bottom:16px}
@@ -247,7 +257,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .story-scroll-hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
   font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);
   display:flex;flex-direction:column;align-items:center;gap:6px;z-index:5;opacity:1;transition:opacity .4s}
-.story-scroll-hint .ln{width:1px;height:26px;background:var(--faint);position:relative;overflow:hidden}
+.story-scroll-hint .ln{width:1px;height:26px;background:var(--faint-deco);position:relative;overflow:hidden}
 .story-scroll-hint .ln::after{content:"";position:absolute;top:-100%;left:0;width:100%;height:100%;
   background:var(--accent);animation:hintrun 1.6s ease infinite}
 @keyframes hintrun{to{top:100%}}
@@ -486,9 +496,9 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .faq__q::after{content:"+";position:absolute;right:6px;top:50%;transform:translateY(-50%);
   color:var(--accent);font-size:22px;transition:transform .25s}
 .faq__item.open .faq__q::after{transform:translateY(-50%) rotate(45deg)}
-.faq__a{max-height:0;overflow:hidden;transition:max-height .3s ease}
-.faq__a p{padding:0 44px 24px 0;color:var(--muted);font-size:16px}
-.faq__item.open .faq__a{max-height:340px}
+.faq__a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.faq__a > p{overflow:hidden;min-height:0;padding:0 44px 24px 0;color:var(--muted);font-size:16px}
+.faq__item.open .faq__a{grid-template-rows:1fr}
 
 /* --- Формы ----------------------------------------------------------------- */
 .form{display:flex;flex-direction:column;gap:16px}
