@@ -561,7 +561,10 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   .stat-card{padding:18px 16px}
   .stat-card .v{font-size:30px}
   .stat-card .k{font-size:10.5px;letter-spacing:.06em;margin-top:8px}
-  .footer-grid{grid-template-columns:1fr;gap:28px}
+  /* Подвал: бренд на всю ширину, «Услуги» и «Компания» — рядом, контакты снизу */
+  .footer-grid{grid-template-columns:1fr 1fr;gap:30px 20px}
+  .footer-brand{grid-column:1 / -1}
+  .footer-col:last-child{grid-column:1 / -1}
   .story-metrics{gap:18px}
   .story-metrics .m .k{font-size:10px}
 }
