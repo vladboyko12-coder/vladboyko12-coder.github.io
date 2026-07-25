@@ -272,6 +272,15 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 .stat-card .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
   color:rgba(255,255,255,.5);margin-top:14px}
 
+/* Логотипы клиентов внутри тёмного блока — продолжение той же мысли */
+.stats-dark .marq{margin-top:clamp(28px,4vw,44px);padding:clamp(24px,3vw,32px) 0 0;
+  border-top:1px solid rgba(255,255,255,.09);border-bottom:0;
+  /* края уводим в тень, чтобы строка не обрывалась резко */
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.stats-dark .marq .lbl{color:rgba(255,255,255,.42)}
+.stats-dark .marq-track span{color:rgba(255,255,255,.34)}
+
 /* --- Светлая строка статистики (внутренние страницы) ---------------------- */
 .stats{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
 .stats-in{display:grid;grid-template-columns:repeat(4,1fr)}
