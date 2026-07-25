@@ -135,7 +135,8 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   -webkit-text-fill-color:transparent}
 .story-sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);margin-top:18px;
   max-height:140px;overflow:hidden;
-  transition:opacity .45s ease,max-height .45s ease,margin-top .45s ease}
+  transition:opacity .5s ease,max-height .85s cubic-bezier(.25,.8,.25,1),
+             margin-top .85s cubic-bezier(.25,.8,.25,1)}
 /* когда сцена доиграла — текст не просто гаснет, а освобождает место */
 .story-sub.is-collapsed{max-height:0;margin-top:0}
 
@@ -180,10 +181,18 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 @media (max-width:720px){
   .story{height:auto}
   .story-pin{position:relative;height:auto;overflow:visible;display:flex;flex-direction:column;
-    justify-content:flex-start;padding:36px 0 44px;gap:8px}
-  .story-head{position:relative;top:auto;padding:0 20px}
+    justify-content:flex-start;padding:36px 0 44px;gap:8px;
+    transition:padding-top .85s cubic-bezier(.25,.8,.25,1)}
+  /* сцена доиграла — блок подтягивается выше */
+  .story.scene-done .story-pin{padding-top:14px}
+  .story-head{position:relative;top:auto;padding:0 20px;
+    transition:transform .85s cubic-bezier(.25,.8,.25,1)}
+  .story.scene-done .story-head{transform:translateY(-6px)}
   .story-h{height:118px}
-  .story-field{height:250px;margin:0 auto}
+  .story-field{height:250px;margin:0 auto;
+    transition:transform .85s cubic-bezier(.25,.8,.25,1)}
+  .story.scene-done .story-field{transform:translateY(-16px)}
+  .story.scene-done .story-outcome{margin-top:2px}
   .funnel-svg{width:86vw;height:300px;transform:translate(-50%,calc(-50% + 26px))}
   .story-outcome{position:relative;bottom:auto;margin-top:18px}
   .story-result{margin-bottom:18px}

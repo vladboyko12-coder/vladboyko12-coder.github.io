@@ -200,6 +200,8 @@
       // схлопываем высоту, чтобы после исчезновения не оставалось пустоты
       sub.classList.toggle("is-collapsed", textP > 0.8);
     }
+    // подтягиваем сцену вверх, когда подзаголовок ушёл
+    story.classList.toggle("scene-done", textP > 0.8);
 
     if (p > 0.66) {
       outcome.classList.add("show");
