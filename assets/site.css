@@ -654,7 +654,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
 /* Карточка — подъём с лёгким уменьшением */
 [data-rise="scale"]{opacity:0;transform:translateY(18px) scale(.965);
   transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)}
-[data-rise="scale"].in{opacity:1;transform:none}
+[data-rise="scale"].in:not(:hover):not(:active){opacity:1;transform:none}
 
 /* Строка кейса — въезд сбоку, поперёк общего вертикального движения */
 [data-rise="slide"]{opacity:0;transform:translateX(-26px);
