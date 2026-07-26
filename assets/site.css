@@ -538,8 +538,9 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   color:var(--accent);font-size:22px;transition:transform .25s}
 .faq__item.open .faq__q::after{transform:translateY(-50%) rotate(45deg)}
 .faq__a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
-.faq__a > p{overflow:hidden;min-height:0;padding:0 44px 24px 0;color:var(--muted);font-size:16px}
+.faq__a > p{overflow:hidden;min-height:0;padding:0 44px 0 0;color:var(--muted);font-size:16px}
 .faq__item.open .faq__a{grid-template-rows:1fr}
+.faq__item.open .faq__a > p{padding-bottom:24px}
 
 /* --- Формы ----------------------------------------------------------------- */
 .form{display:flex;flex-direction:column;gap:16px}
@@ -615,6 +616,7 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   display:flex;align-items:center;justify-content:center;color:var(--muted);transition:.18s}
 .footer-social a:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-2px)}
 .footer-social a[aria-disabled="true"]{opacity:.4;pointer-events:none}
+.footer-bottom a[aria-disabled="true"]{opacity:.55;pointer-events:none}
 .footer-col h4{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--faint);font-weight:500;margin:0 0 16px}
 .footer-col li{margin-bottom:10px}
@@ -784,9 +786,9 @@ h3{font-size:clamp(18px,1.6vw,21px);font-weight:800;letter-spacing:-.01em}
   .story-metrics .m .k{font-size:10px}
 }
 @media (prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important;scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto}
   [data-rise]{opacity:1;transform:none}
-  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
   .spot::after{display:none}
   [data-rise="mask"]>*{clip-path:none}
   [data-rise="scale"],[data-rise="slide"],[data-rise="fade"]{opacity:1;transform:none}
